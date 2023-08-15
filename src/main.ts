@@ -13,6 +13,7 @@ async function bootstrap() {
 
   app.useGlobalFilters(new ExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
+  app.setGlobalPrefix(config.GLOBAL_PREFIX);
 
   await app.listen(config.PORT);
 }
