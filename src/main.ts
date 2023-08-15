@@ -4,16 +4,23 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { Config, ENV } from './config';
 import { ExceptionFilter } from './core/filters';
 import { TransformInterceptor } from './core/interceptors';
+import { swaggerConfig } from './setup-swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true,
   });
+  
   const config = app.get<Config>(ENV);
 
   app.useGlobalFilters(new ExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
   app.setGlobalPrefix(config.GLOBAL_PREFIX);
+
+  const document = SwaggerModule.createDocument(app,swaggerConfig)
+
+  SwaggerModule.setup(config.GLOBAL_PREFIX, app, document)
 
   await app.listen(config.PORT);
 }
