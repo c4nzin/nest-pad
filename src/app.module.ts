@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { EnvalidModule } from 'nestjs-envalid';
 import { validators } from './config';
 import { DatabaseModule } from './modules/database/database.module';
+import { AuthModule } from './features/auth/auth.module';
 
 @Module({
   imports: [
@@ -10,6 +11,8 @@ import { DatabaseModule } from './modules/database/database.module';
       validators,
       useDotenv: true,
     }),
+    AuthModule,
+
     DatabaseModule,
   ],
 })
