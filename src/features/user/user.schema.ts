@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
-export class User {
+export class User extends Document {
   @Prop({ unique: true, type: String, trim: true, maxlength: 15, minlength: 3 })
   public username: string;
 
@@ -26,6 +26,9 @@ export class User {
     select: false,
   })
   public password: string;
+
+  @Prop({ type: Types.ObjectId, default: [], ref: 'User' })
+  public notes: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
