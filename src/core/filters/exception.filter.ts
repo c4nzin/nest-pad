@@ -5,13 +5,12 @@ import {
   HttpStatus,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 @Catch()
 export class ExceptionFilter<T> implements ExceptionFilter<T> {
-  public catch(exception: T, host: ArgumentsHost) {
+  public async catch(exception: T, host: ArgumentsHost): Promise<any> {
     const ctx = host.switchToHttp();
-    const request = ctx.getRequest<Request>();
     const response = ctx.getResponse<Response>();
 
     const status =
@@ -24,8 +23,6 @@ export class ExceptionFilter<T> implements ExceptionFilter<T> {
         ? exception.getResponse()
         : new InternalServerErrorException().getResponse();
 
-    return response
-      .status(status)
-      .json({ response: res, url: request.url, method: request.method });
+    response.status(status).json(res);
   }
 }

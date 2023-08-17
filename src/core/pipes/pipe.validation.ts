@@ -9,7 +9,10 @@ import { ValidationError, validate } from 'class-validator';
 
 @Injectable()
 export class PipeValidation<T> implements PipeTransform {
-  public async transform(value: T, { metatype }: ArgumentMetadata) {
+  public async transform(
+    value: T,
+    { metatype }: ArgumentMetadata,
+  ): Promise<any> {
     if (!metatype || !this.toValidate(metatype)) {
       return value;
     }
@@ -32,7 +35,7 @@ export class PipeValidation<T> implements PipeTransform {
     throw new BadRequestException(errMessages);
   }
 
-  public async toValidate(metatype: Function) {
+  public async toValidate(metatype: Function): Promise<boolean> {
     const types: Function[] = [Array, Object, String, Boolean, Number];
 
     return !types.includes(metatype);

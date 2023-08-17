@@ -8,9 +8,15 @@ import { Observable } from 'rxjs';
 import { Response } from 'express';
 import { map } from 'rxjs/operators';
 import { IResponse } from '../interfaces';
+import { Reflector } from '@nestjs/core';
+import { MESSAGE_TOKEN } from '../decorators/message.decorator';
 
 @Injectable()
-export class TransformInterceptor<T> implements NestInterceptor {
+export class TransformInterceptor<T>
+  implements NestInterceptor<T, IResponse<T>>
+{
+  constructor(private readonly reflector: Reflector) {}
+
   public async intercept(
     context: ExecutionContext,
     next: CallHandler<T>,
@@ -25,7 +31,9 @@ export class TransformInterceptor<T> implements NestInterceptor {
     const ctx = context.switchToHttp().getResponse<Response>();
     const statusCode = ctx.statusCode;
     const method = ctx.req.method;
+    const handler = context.getHandler();
+    const message = this.reflector.get<string>(MESSAGE_TOKEN, handler);
 
-    return { statusCode, method, data };
+    return { message, statusCode, method, data };
   }
 }
