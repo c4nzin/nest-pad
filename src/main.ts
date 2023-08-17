@@ -8,6 +8,7 @@ import { swaggerConfig } from './setup-swagger';
 import { SwaggerModule } from '@nestjs/swagger';
 import expressMongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
+import compression from 'compression';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -23,8 +24,8 @@ async function bootstrap(): Promise<void> {
       dryRun: true,
     }),
   );
-
   app.use(helmet());
+  app.use(compression());
 
   app.useGlobalFilters(new ExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
