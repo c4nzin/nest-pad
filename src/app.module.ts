@@ -3,6 +3,7 @@ import { EnvalidModule } from 'nestjs-envalid';
 import { validators } from './config';
 import { DatabaseModule } from './modules/database/database.module';
 import { AuthModule } from './features/auth/auth.module';
+import { LoggerModule } from './modules/logger/logger.module';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { AuthModule } from './features/auth/auth.module';
       useDotenv: true,
     }),
     AuthModule,
-
+    LoggerModule,
     DatabaseModule,
   ],
 })
