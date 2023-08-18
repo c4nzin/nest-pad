@@ -25,4 +25,11 @@ export class AuthController {
   public async login(@Body() data: LoginDto): TokenResponse {
     return await this.authService.login(data);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Message('Sucessfully logged out')
+  @Get('logout')
+  public async logout(@Req() req: Request): Promise<any> {
+    await this.authService.logout(req.user['sub']);
+  }
 }
