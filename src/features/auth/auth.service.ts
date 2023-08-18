@@ -65,4 +65,9 @@ export class AuthService {
   public async logout(userId: string): Promise<UserDocument> {
     return this.usersService.update(userId, { refreshToken: null });
   }
+
+  //This field will be removed
+  public async hashData(data: string): Promise<string> {
+    return argon2.hash(data);
+  }
 }
