@@ -70,4 +70,14 @@ export class AuthService {
   public async hashData(data: string): Promise<string> {
     return argon2.hash(data);
   }
+
+  public async updateRefreshToken(
+    userId: string,
+    refreshToken: string,
+  ): Promise<void> {
+    const hashedRefreshToken = await this.hashData(refreshToken);
+    await this.usersService.update(userId, {
+      refreshToken: hashedRefreshToken,
+    });
+  }
 }
