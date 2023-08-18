@@ -13,4 +13,8 @@ export class UserService {
     const createdUser = new this.userModel(createUserDto);
     return createdUser.save();
   }
+
+  public async findById(username: string): Promise<UserDocument> {
+    return this.userModel.findOne({ username }).exec();
+  }
 }
