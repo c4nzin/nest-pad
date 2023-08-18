@@ -4,6 +4,7 @@ import { validators } from './config';
 import { DatabaseModule } from './modules/database/database.module';
 import { AuthModule } from './features/auth/auth.module';
 import { LoggerModule } from './modules/logger/logger.module';
+import { UserModule } from './features/user/user.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { LoggerModule } from './modules/logger/logger.module';
     AuthModule,
     LoggerModule,
     DatabaseModule,
+    UserModule,
   ],
 })
 export class AppModule {}
