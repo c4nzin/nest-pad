@@ -113,4 +113,30 @@ export class AuthService {
       refreshToken,
     };
   }
+
+  public async refreshToken(
+    userId: string,
+    refreshToken: string,
+  ): TokenResponse {
+    const user = await this.usersService.findById(userId);
+
+    if (!user) throw new BadRequestException('User not found');
+
+    if (!user.refreshToken) {
+      throw new ForbiddenException('Refresh token is not found');
+    }
+
+    const isRefreshTokenMatches = await argon2.verify(
+      user.refreshToken,
+      refreshToken,
+    );
+
+    if (!isRefreshTokenMatches) throw new ForbiddenException('Access Denied');
+
+    const tokens = await this.getTokens(user.id, user.username);
+
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+
+    return tokens;
+  }
 }
