@@ -80,4 +80,37 @@ export class AuthService {
       refreshToken: hashedRefreshToken,
     });
   }
+
+  public async getTokens(userId: string, username: string): TokenResponse {
+    const [accessToken, refreshToken] = await Promise.all([
+      //Generating access token
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          username,
+        },
+        {
+          secret: this.config.JWT_ACCESS_SECRET,
+          expiresIn: this.config.EXPIRES_IN,
+        },
+      ),
+
+      //Generating refresh jwt
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          username,
+        },
+        {
+          secret: this.config.JWT_REFRESH_SECRET,
+          expiresIn: this.config.REFRESH_TIME,
+        },
+      ),
+    ]);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
 }
