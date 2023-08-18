@@ -19,4 +19,10 @@ export class AuthController {
   public async register(@Body() createUserDto: RegisterDto): TokenResponse {
     return await this.authService.register(createUserDto);
   }
+
+  @Message('Sucessfully logged in')
+  @Post('login')
+  public async login(@Body() data: LoginDto): TokenResponse {
+    return await this.authService.login(data);
+  }
 }
