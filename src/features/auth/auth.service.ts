@@ -39,4 +39,26 @@ export class AuthService {
 
     return tokens;
   }
+
+  public async login(loginDto: LoginDto): TokenResponse {
+    const user = await this.usersService.findByUsername(loginDto.username);
+    if (!user) {
+      throw new BadRequestException('User does not exist');
+    }
+
+    const isPasswordMatches = await argon2.verify(
+      user.password,
+      loginDto.password,
+    );
+
+    if (!isPasswordMatches) {
+      throw new BadRequestException('Password is not correct');
+    }
+
+    const tokens = await this.getTokens(user._id, user.username);
+
+    await this.updateRefreshToken(user._id, tokens.refreshToken);
+
+    return tokens;
+  }
 }
