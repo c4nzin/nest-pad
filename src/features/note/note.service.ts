@@ -3,20 +3,19 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Note, NoteDocument } from './note.schema';
 import { Model } from 'mongoose';
 import { CreateNotepadDto } from './dto/create-notepad.dto';
-import { User, UserDocument } from '../user/user.schema';
 import { UserService } from '../user/user.service';
 
 @Injectable()
 export class NoteService {
   constructor(
-    @InjectModel(Note.name) private noteModel: Model<Note>,
+    @InjectModel(Note.name) private noteModel: Model<NoteDocument>,
     private readonly usersService: UserService,
   ) {}
 
   public async create(
     createNotepadDto: CreateNotepadDto,
     username: string,
-  ): Promise<any> {
+  ): Promise<NoteDocument> {
     const user = await this.usersService.findByUsername(username);
     const notepad = await this.noteModel.create({
       ...createNotepadDto,
