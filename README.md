@@ -2,7 +2,7 @@
 
 <br/>
   <p align="center">
-    A quick brief about the project
+    memo pal is an application that helps you create, delete, and update notes. It utilizes JWT for user authentication and NestJS for handling operations in the background. MongoDB is chosen as the database, ensuring secure and efficient storage of your notes.
     <br/>
     <br/>
     <a href="https://github.com/CANMERTINYO/memo-pal"><strong>Explore the repo »</strong></a>
