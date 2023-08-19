@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Note, NoteDocument } from './note.schema';
 import { Model } from 'mongoose';
@@ -23,5 +23,25 @@ export class NoteService {
     });
     await this.usersService.updateArray(user._id, notepad._id);
     return notepad.save();
+  }
+
+  public async delete(
+    toDeleteNotepadId: string,
+    requestId: string,
+  ): Promise<NoteDocument> {
+    const note = await this.noteModel.findById({ _id: toDeleteNotepadId });
+
+    if (!note) {
+      throw new BadRequestException('Notepad is not found');
+    }
+
+    if (!note.author.equals(requestId)) {
+      throw new BadRequestException(
+        'You are not authorized to delete this note',
+      );
+    }
+
+    await this.usersService.deleteItemFromArray(requestId, toDeleteNotepadId);
+    return this.noteModel.findByIdAndDelete(toDeleteNotepadId);
   }
 }

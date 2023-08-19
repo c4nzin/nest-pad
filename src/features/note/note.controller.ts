@@ -1,4 +1,12 @@
-import { Controller, Post, UseGuards, Body, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Body,
+  Req,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { Message } from 'src/core/decorators';
 import { NoteService } from './note.service';
 import { AccessTokenGuard } from 'src/core/guards';
@@ -21,5 +29,15 @@ export class NoteController {
   ): Promise<NoteDocument> {
     const currentUsername = req.user['username'];
     return this.noteService.create(createNotepadDto, currentUsername);
+  }
+
+  @Delete(':id')
+  @UseGuards(AccessTokenGuard)
+  public async deleteById(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<NoteDocument> {
+    const currentUserId = req.user['sub'];
+    return this.noteService.delete(id, currentUserId);
   }
 }
