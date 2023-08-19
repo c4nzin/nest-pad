@@ -4,6 +4,7 @@ import { Note, NoteDocument } from './note.schema';
 import { Model } from 'mongoose';
 import { CreateNotepadDto } from './dto/create-notepad.dto';
 import { UserService } from '../user/user.service';
+import { UserDocument } from '../user/user.schema';
 
 @Injectable()
 export class NoteService {
@@ -28,8 +29,9 @@ export class NoteService {
   public async delete(
     toDeleteNotepadId: string,
     requestId: string,
-  ): Promise<NoteDocument> {
+  ): Promise<UserDocument> {
     const note = await this.noteModel.findById({ _id: toDeleteNotepadId });
+    const user = await this.usersService.findById(requestId);
 
     if (!note) {
       throw new BadRequestException('Notepad is not found');
@@ -41,7 +43,15 @@ export class NoteService {
       );
     }
 
-    await this.usersService.deleteItemFromArray(requestId, toDeleteNotepadId);
-    return this.noteModel.findByIdAndDelete(toDeleteNotepadId);
+    await this.noteModel.findByIdAndDelete(toDeleteNotepadId);
+
+    // Somehow this code ain't running. Will be fixed soon
+    // NEED TO BE FIXED: await this.usersService.deleteItemFromArray(requestId, toDeleteNotepadId);
+
+    // Alternative one but it has only plain javascript.
+    // I will use it temporarily.
+    user.notes = user.notes.filter((id) => id != note.id);
+
+    return user.save();
   }
 }
