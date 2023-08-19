@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, HydratedDocument } from 'mongoose';
+import { Document, HydratedDocument, Types } from 'mongoose';
 import { User } from '../user/user.schema';
 
 export type NoteDocument = HydratedDocument<Note>;
@@ -15,8 +15,8 @@ export class Note extends Document {
   })
   public title: string;
 
-  @Prop({ type: User, required: true, trim: true, ref: 'User' })
-  public author: User;
+  @Prop({ type: Types.ObjectId, required: true, trim: true, ref: 'User' })
+  public author: Types.ObjectId;
 
   @Prop({ type: String, required: true, maxlength: 30000 }) //30kb
   public content: String;

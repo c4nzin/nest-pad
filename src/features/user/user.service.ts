@@ -27,4 +27,11 @@ export class UserService {
       .findByIdAndUpdate(id, updateDto, { new: true })
       .exec();
   }
+
+  public async updateArray(userId: string, note: any): Promise<any> {
+    return this.userModel.updateOne(
+      { _id: userId },
+      { $push: { notes: note } },
+    );
+  }
 }
