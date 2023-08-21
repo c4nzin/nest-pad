@@ -14,8 +14,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateNotepadDto } from './dto/create-notepad.dto';
 import { NoteDocument } from './note.schema';
 import { Request } from 'express';
+import { UserDocument } from '../user/user.schema';
 
-@Controller('notes')
+@Controller()
 @ApiTags('Notes')
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}
@@ -36,7 +37,7 @@ export class NoteController {
   public async deleteById(
     @Param('id') id: string,
     @Req() req: Request,
-  ): Promise<NoteDocument> {
+  ): Promise<UserDocument | NoteDocument> {
     const currentUserId = req.user['sub'];
     return this.noteService.delete(id, currentUserId);
   }

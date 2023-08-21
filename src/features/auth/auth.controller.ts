@@ -9,7 +9,7 @@ import { AccessTokenGuard, RefreshTokenGuard } from 'src/core/guards/';
 import { ApiTags } from '@nestjs/swagger';
 import { TokenResponse } from 'src/core/interfaces';
 
-@Controller('auth')
+@Controller()
 @ApiTags('Auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
