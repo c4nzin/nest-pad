@@ -6,19 +6,11 @@ import { AuthModule } from './features/auth/auth.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { UserModule } from './features/user/user.module';
 import { NoteModule } from './features/note/note.module';
-import { RouterModule } from '@nestjs/core';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD, RouterModule } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
-    ThrottlerModule.forRootAsync({
-      inject: [ENV],
-      useFactory: (configService: Config) => ({
-        ttl: configService.THROTTLE_TTL,
-        limit: configService.THROTTLE_LIMIT,
-      }),
-    }),
-
     EnvalidModule.forRoot({
       isGlobal: true,
       validators,
@@ -37,6 +29,19 @@ import { ThrottlerModule } from '@nestjs/throttler';
         module: UserModule,
       },
     ]),
+    ThrottlerModule.forRootAsync({
+      inject: [ENV],
+      useFactory: (configService: Config) => ({
+        ttl: configService.THROTTLE_TTL,
+        limit: configService.THROTTLE_LIMIT,
+      }),
+    }),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}
