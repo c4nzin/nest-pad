@@ -3,9 +3,9 @@ import {
   Post,
   UseGuards,
   Body,
-  Req,
   Delete,
   Param,
+  Get,
 } from '@nestjs/common';
 import { Message, User } from 'src/core/decorators';
 import { NoteService } from './note.service';
@@ -22,7 +22,7 @@ export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
   @Post('create')
-  @Message('Sucessfully created note')
+  @Message('Sucessfully created the note')
   public async createNote(
     @Body() createNotepadDto: CreateNotepadDto,
     @User('username') username: string,
@@ -31,10 +31,20 @@ export class NoteController {
   }
 
   @Delete(':id')
+  @Message('Sucessfully deleted the note')
   public async deleteNoteById(
     @Param('id') noteId: string,
     @User('sub') userId: string,
   ): Promise<UserDocument> {
     return this.noteService.delete(noteId, userId);
+  }
+
+  @Get(':id')
+  @Message('Successfully fetched the note')
+  public async findNoteById(
+    @Param('id') noteId: string,
+    @User('sub') userId: string,
+  ): Promise<NoteDocument> {
+    return this.noteService.findNoteById(noteId, userId);
   }
 }

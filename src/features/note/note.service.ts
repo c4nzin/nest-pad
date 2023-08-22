@@ -1,7 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Note, NoteDocument } from './note.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateNotepadDto } from './dto';
 import { UserService } from '../user/user.service';
 import { UserDocument } from '../user/user.schema';
@@ -52,8 +56,22 @@ export class NoteService {
 
     // Alternative one but it has only plain javascript.
     // I will use it temporarily.
-    user.notes = user.notes.filter((id) => id != note.id);
+    user.notes = user.notes.filter((id) => id !== note._id);
 
     return user.save();
+  }
+
+  public async findNoteById(
+    noteId: string,
+    userId: Types.ObjectId | string,
+  ): Promise<NoteDocument> {
+    const note = await this.noteModel.findById({ _id: noteId });
+
+    if (!note) throw new BadRequestException('Note is not found');
+
+    if (!note.author._id.equals(userId))
+      throw new UnauthorizedException('Access denied');
+
+    return note;
   }
 }
