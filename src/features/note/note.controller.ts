@@ -35,11 +35,11 @@ export class NoteController {
 
   //Needs to be improved with decorator issue link : https://github.com/canmertinyo/memo-pal/issues/46
   @Delete(':id')
-  public async deleteById(
-    @Param('id') id: string,
+  public async deleteNoteById(
+    @Param('id') noteId: string,
     @Req() req: Request,
   ): Promise<UserDocument | NoteDocument> {
     const currentUserId = req.user['sub'];
-    return this.noteService.delete(id, currentUserId);
+    return this.noteService.delete(noteId, currentUserId);
   }
 }

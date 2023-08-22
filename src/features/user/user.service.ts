@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, UpdateWriteOpResult } from 'mongoose';
-import { RegisterDto } from '../auth/dto';
+import { RegisterDto, RefreshTokenDto } from '../auth/dto';
 import { User, UserDocument } from './user.schema';
-import { UpdateDto } from '../auth/dto/update.dto';
 
 @Injectable()
 export class UserService {
@@ -34,9 +33,9 @@ export class UserService {
     return this.userModel.findOne({ $or: [{ username }, { email }] });
   }
 
-  public async update(
+  public async updateRefreshToken(
     id: string | Types.ObjectId,
-    updateDto: UpdateDto,
+    updateDto: RefreshTokenDto,
   ): Promise<UserDocument> {
     return this.userModel.findByIdAndUpdate(id, updateDto, { new: true });
   }
