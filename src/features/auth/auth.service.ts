@@ -9,12 +9,12 @@ import { TokenService } from 'src/helpers/tokens/token.service';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UserService,
+    private readonly userService: UserService,
     private readonly tokenService: TokenService,
   ) {}
 
   public async register(registerDto: RegisterDto): Promise<string> {
-    const isUserAlreadyExists = await this.usersService.findByUsernameAndEmail(
+    const isUserAlreadyExists = await this.userService.findByUsernameAndEmail(
       registerDto.email,
       registerDto.username,
     );
@@ -31,7 +31,7 @@ export class AuthService {
       registerDto.password,
     );
 
-    const createdUser = await this.usersService.create({
+    const createdUser = await this.userService.create({
       ...registerDto,
       password: hashedPassword,
     });
@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   public async login(loginDto: LoginDto): Promise<string> {
-    const user = await this.usersService.findByUsername(loginDto.username);
+    const user = await this.userService.findByUsername(loginDto.username);
 
     if (!user) {
       throw new BadRequestException('User does not exist');
@@ -69,6 +69,6 @@ export class AuthService {
   }
 
   public async logout(userId: string): Promise<UserDocument> {
-    return this.usersService.update(userId, { refreshToken: null });
+    return this.userService.updateRefreshToken(userId, { refreshToken: null });
   }
 }

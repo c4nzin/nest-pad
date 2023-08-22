@@ -1,1 +1,1 @@
-//dtos
+export * from './create-notepad.dto';
