@@ -9,17 +9,18 @@ import { Config, ENV } from '../../config';
 import { UserService } from 'src/features/user/user.service';
 import * as argon2 from 'argon2';
 import { TokenResponse } from 'src/core/interfaces';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
-    @Inject(ENV) private config: Config,
     private readonly usersService: UserService,
+    @Inject(ENV) private config: Config,
   ) {}
 
   public async updateRefreshToken(
-    userId: string,
+    userId: string | Types.ObjectId,
     refreshToken: string,
   ): Promise<void> {
     const hashedRefreshToken = await this.hashData(refreshToken);
@@ -29,7 +30,7 @@ export class TokenService {
   }
 
   public async generateAccessToken(
-    userId: string,
+    userId: string | Types.ObjectId,
     username: string,
   ): Promise<string> {
     return this.jwtService.signAsync(
@@ -42,7 +43,7 @@ export class TokenService {
   }
 
   public async generateRefreshToken(
-    userId: string,
+    userId: string | Types.ObjectId,
     username: string,
   ): Promise<string> {
     return this.jwtService.signAsync(
@@ -59,7 +60,7 @@ export class TokenService {
   }
 
   public async refreshToken(
-    userId: string,
+    userId: string | Types.ObjectId,
     refreshToken: string,
   ): Promise<string> {
     const user = await this.usersService.findById(userId);
@@ -70,35 +71,32 @@ export class TokenService {
       throw new ForbiddenException('Refresh token is not found');
     }
 
-    const isRefreshTokenMatches = await argon2.verify(
+    const isRefreshTokenValid = await argon2.verify(
       user.refreshToken,
       refreshToken,
     );
 
-    if (!isRefreshTokenMatches) throw new ForbiddenException('Access Denied');
+    if (!isRefreshTokenValid) throw new ForbiddenException('Access Denied');
 
-    const generateAccessToken = await this.generateAccessToken(
+    const accessToken = await this.generateAccessToken(user._id, user.username);
+
+    const newRefreshToken = await this.generateRefreshToken(
       user._id,
       user.username,
     );
 
-    const generateRefreshToken = await this.generateRefreshToken(
-      user._id,
-      user.username,
-    );
+    await this.updateRefreshToken(user._id, newRefreshToken);
 
-    await this.updateRefreshToken(user.id, generateRefreshToken);
-
-    return generateAccessToken;
+    return accessToken;
   }
 
   public async generateAndSaveTokens(
-    userId: string,
+    userId: string | Types.ObjectId,
     username: string,
   ): Promise<TokenResponse> {
     const accessToken = await this.generateAccessToken(userId, username);
     const refreshToken = await this.generateRefreshToken(userId, username);
-    await this.updateRefreshToken(userId, username);
+    await this.updateRefreshToken(userId, refreshToken);
 
     return { accessToken, refreshToken };
   }
