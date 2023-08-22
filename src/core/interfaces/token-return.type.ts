@@ -1,4 +1,4 @@
-export type TokenResponse = Promise<{
-  refreshToken: string;
+export type TokenResponse = {
   accessToken: string;
-}>;
+  refreshToken: string;
+};
