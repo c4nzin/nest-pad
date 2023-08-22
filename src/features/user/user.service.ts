@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateWriteOpResult } from 'mongoose';
+import { Model, Types, UpdateWriteOpResult } from 'mongoose';
 import { RegisterDto } from '../auth/dto';
 import { User, UserDocument } from './user.schema';
 import { UpdateDto } from '../auth/dto/update.dto';
@@ -13,7 +13,9 @@ export class UserService {
     return new this.userModel(createUserDto);
   }
 
-  public async findById(userId: string): Promise<UserDocument> {
+  public async findById(
+    userId: string | Types.ObjectId,
+  ): Promise<UserDocument> {
     return this.userModel.findById({ _id: userId });
   }
 
@@ -25,14 +27,20 @@ export class UserService {
     return this.userModel.findOne({ username });
   }
 
-  public async update(id: string, updateDto: UpdateDto): Promise<UserDocument> {
+  public async update(
+    id: string | Types.ObjectId,
+    updateDto: UpdateDto,
+  ): Promise<UserDocument> {
     return this.userModel.findByIdAndUpdate(id, updateDto, { new: true });
   }
 
-  public async updateArray(userId: string, note: any): Promise<any> {
+  public async updateArray(
+    userId: string | Types.ObjectId,
+    noteId: Types.ObjectId,
+  ): Promise<UpdateWriteOpResult> {
     return this.userModel.updateOne(
       { _id: userId },
-      { $push: { notes: note } },
+      { $push: { notes: noteId } },
     );
   }
 

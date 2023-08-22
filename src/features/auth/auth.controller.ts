@@ -19,21 +19,21 @@ export class AuthController {
 
   @Message('Sucessfully registered')
   @Post('register')
-  public async register(@Body() createUserDto: RegisterDto): Promise<string> {
-    return await this.authService.register(createUserDto);
+  public async register(@Body() registerDto: RegisterDto): Promise<string> {
+    return await this.authService.register(registerDto);
   }
 
   @Message('Sucessfully logged in')
   @Post('login')
-  public async login(@Body() data: LoginDto): Promise<string> {
-    return await this.authService.login(data);
+  public async login(@Body() loginDto: LoginDto): Promise<string> {
+    return await this.authService.login(loginDto);
   }
 
   @UseGuards(AccessTokenGuard)
   @Message('Sucessfully logged out')
   @Get('logout')
   // Create a decorator to get user sub property
-  public async logout(@Req() req: Request): Promise<any> {
+  public async logout(@Req() req: Request): Promise<void> {
     await this.authService.logout(req.user['sub']);
   }
 

@@ -17,6 +17,7 @@ import { Request } from 'express';
 import { UserDocument } from '../user/user.schema';
 
 @Controller()
+@UseGuards(AccessTokenGuard)
 @ApiTags('Notes')
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}
@@ -24,7 +25,6 @@ export class NoteController {
   //Needs to be improved with decorator issue link : https://github.com/canmertinyo/memo-pal/issues/46
   @Post('create')
   @Message('Sucessfully created note')
-  @UseGuards(AccessTokenGuard)
   public async createNote(
     @Body() createNotepadDto: CreateNotepadDto,
     @Req() req: Request,
@@ -35,7 +35,6 @@ export class NoteController {
 
   //Needs to be improved with decorator issue link : https://github.com/canmertinyo/memo-pal/issues/46
   @Delete(':id')
-  @UseGuards(AccessTokenGuard)
   public async deleteById(
     @Param('id') id: string,
     @Req() req: Request,
