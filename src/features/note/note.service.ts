@@ -67,9 +67,7 @@ export class NoteService {
   ): Promise<NoteDocument> {
     const note = await this.noteModel.findById({ _id: noteId });
 
-    if (!note) throw new BadRequestException('Note is not found');
-
-    if (!note.author._id.equals(userId))
+    if (!note.author._id.equals(userId) || !note)
       throw new UnauthorizedException('Access denied');
 
     return note;
