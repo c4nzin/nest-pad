@@ -4,8 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { Config, ENV } from './config';
 import { ExceptionFilter } from './core/filters';
 import { TransformInterceptor, LoggingInterceptor } from './core/interceptors';
-import { swaggerConfig } from './setup-swagger';
-import { SwaggerModule } from '@nestjs/swagger';
+import { setupSwagger } from './setup-swagger';
 import expressMongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -33,11 +32,7 @@ async function bootstrap(): Promise<void> {
   app.useGlobalInterceptors(new TransformInterceptor(new Reflector()));
   app.setGlobalPrefix(config.GLOBAL_PREFIX);
   app.useGlobalInterceptors(new LoggingInterceptor(logger));
-
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-
-  SwaggerModule.setup(config.GLOBAL_PREFIX, app, document);
-
+  setupSwagger(app);
   await app.listen(config.PORT);
 }
 bootstrap();
