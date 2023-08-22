@@ -14,19 +14,18 @@ export class AuthService {
   ) {}
 
   public async register(registerDto: RegisterDto): Promise<string> {
-    const isUserAlreadyExists = await this.usersService.findByUsername(
+    const isUserAlreadyExists = await this.usersService.findByUsernameAndEmail(
+      registerDto.email,
       registerDto.username,
     );
 
-    if (isUserAlreadyExists)
-      throw new BadRequestException('User already exists');
-
-    const existingUserEmail = await this.usersService.findByEmail(
-      registerDto.email,
-    );
-
-    if (existingUserEmail)
+    if (isUserAlreadyExists.email) {
       throw new BadRequestException('Email is already registered');
+    }
+
+    if (isUserAlreadyExists.username) {
+      throw new BadRequestException('User already exists');
+    }
 
     const hashedPassword = await this.tokenService.hashData(
       registerDto.password,

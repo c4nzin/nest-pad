@@ -27,6 +27,13 @@ export class UserService {
     return this.userModel.findOne({ username });
   }
 
+  public findByUsernameAndEmail(
+    email: string,
+    username: string,
+  ): Promise<UserDocument> {
+    return this.userModel.findOne({ $or: [{ username }, { email }] });
+  }
+
   public async update(
     id: string | Types.ObjectId,
     updateDto: UpdateDto,
