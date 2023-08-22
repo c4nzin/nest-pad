@@ -3,11 +3,12 @@ import { Request } from 'express';
 import { RegisterDto } from './dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto';
-import { Message } from 'src/core/decorators/';
+import { Message, User } from 'src/core/decorators/';
 
 import { AccessTokenGuard, RefreshTokenGuard } from 'src/core/guards/';
 import { ApiTags } from '@nestjs/swagger';
 import { TokenService } from 'src/helpers/tokens/token.service';
+import { UserDocument } from '../user/user.schema';
 
 @Controller()
 @ApiTags('Auth')
@@ -32,9 +33,8 @@ export class AuthController {
   @UseGuards(AccessTokenGuard)
   @Message('Sucessfully logged out')
   @Get('logout')
-  // Create a decorator to get user sub property
-  public async logout(@Req() req: Request): Promise<void> {
-    await this.authService.logout(req.user['sub']);
+  public async logout(@User('sub') sub: string): Promise<void> {
+    await this.authService.logout(sub);
   }
 
   @UseGuards(RefreshTokenGuard)
