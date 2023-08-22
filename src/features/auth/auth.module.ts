@@ -1,20 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
-import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies/';
+import { TokenModule } from 'src/helpers/tokens/token.module';
 
 @Module({
-  imports: [
-    UserModule,
-    JwtModule.register({
-      verifyOptions: { ignoreExpiration: false },
-      global: true,
-    }),
-  ],
+  imports: [UserModule, TokenModule],
   controllers: [AuthController],
-  providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
+  providers: [AuthService],
   exports: [AuthService],
 })
 export class AuthModule {}

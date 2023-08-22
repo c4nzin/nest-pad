@@ -6,7 +6,7 @@ import { JwtPayload } from 'src/core/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(@Inject(ENV) private readonly configService: Config) {
+  constructor(@Inject(ENV) configService: Config) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: configService.JWT_ACCESS_SECRET,

@@ -21,6 +21,7 @@ import { UserDocument } from '../user/user.schema';
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
+  //Needs to be improved with decorator issue link : https://github.com/canmertinyo/memo-pal/issues/46
   @Post('create')
   @Message('Sucessfully created note')
   @UseGuards(AccessTokenGuard)
@@ -32,6 +33,7 @@ export class NoteController {
     return this.noteService.create(createNotepadDto, currentUsername);
   }
 
+  //Needs to be improved with decorator issue link : https://github.com/canmertinyo/memo-pal/issues/46
   @Delete(':id')
   @UseGuards(AccessTokenGuard)
   public async deleteById(

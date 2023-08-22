@@ -4,29 +4,29 @@ import { Model, UpdateWriteOpResult } from 'mongoose';
 import { RegisterDto } from '../auth/dto';
 import { User, UserDocument } from './user.schema';
 import { UpdateDto } from '../auth/dto/update.dto';
-import { NoteDocument } from '../note/note.schema';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   public async create(createUserDto: RegisterDto): Promise<UserDocument> {
-    const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
+    return new this.userModel(createUserDto);
   }
 
   public async findById(userId: string): Promise<UserDocument> {
     return this.userModel.findById({ _id: userId });
   }
 
+  public async findByEmail(email: string): Promise<UserDocument> {
+    return this.userModel.findOne({ email });
+  }
+
   public findByUsername(username: string): Promise<UserDocument> {
-    return this.userModel.findOne({ username }).exec();
+    return this.userModel.findOne({ username });
   }
 
   public async update(id: string, updateDto: UpdateDto): Promise<UserDocument> {
-    return this.userModel
-      .findByIdAndUpdate(id, updateDto, { new: true })
-      .exec();
+    return this.userModel.findByIdAndUpdate(id, updateDto, { new: true });
   }
 
   public async updateArray(userId: string, note: any): Promise<any> {
