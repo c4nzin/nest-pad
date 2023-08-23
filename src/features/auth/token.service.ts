@@ -23,7 +23,7 @@ export class TokenService {
     userId: string | Types.ObjectId,
     refreshToken: string,
   ): Promise<void> {
-    const hashedRefreshToken = await this.hashData(refreshToken);
+    const hashedRefreshToken = await argon2.hash(refreshToken);
     await this.usersService.updateRefreshToken(userId, {
       refreshToken: hashedRefreshToken,
     });
@@ -53,10 +53,6 @@ export class TokenService {
         expiresIn: this.config.REFRESH_TIME,
       },
     );
-  }
-
-  public async hashData(data: string): Promise<string> {
-    return argon2.hash(data);
   }
 
   public async refreshToken(

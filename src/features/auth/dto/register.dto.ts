@@ -13,9 +13,11 @@ export class RegisterDto {
   public password: string;
 
   @IsEmail()
+  @IsNotEmpty()
   @ApiProperty()
   public email: string;
 
   @IsOptional()
+  @IsString()
   public refreshToken: string;
 }
