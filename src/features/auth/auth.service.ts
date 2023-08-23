@@ -23,9 +23,7 @@ export class AuthService {
     if (isUserAlreadyExists.length > 0)
       throw new BadRequestException('Username or email already registered');
 
-    const hashedPassword = await this.tokenService.hashData(
-      registerDto.password,
-    );
+    const hashedPassword = await argon2.hash(registerDto.password);
 
     const createdUser = await this.userService.create({
       ...registerDto,

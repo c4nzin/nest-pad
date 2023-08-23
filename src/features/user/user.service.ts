@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, UpdateWriteOpResult } from 'mongoose';
 import { RegisterDto, RefreshTokenDto } from '../auth/dto';
 import { User, UserDocument } from './user.schema';
-import { NoteDocument } from '../note/note.schema';
 
 @Injectable()
 export class UserService {
@@ -41,13 +40,13 @@ export class UserService {
     return this.userModel.findByIdAndUpdate(id, updateDto, { new: true });
   }
 
-  public async updateArray(
+  public async addNoteToUser(
     userId: string | Types.ObjectId,
-    noteId: Types.ObjectId,
+    newNoteId: Types.ObjectId,
   ): Promise<UpdateWriteOpResult> {
     return this.userModel.updateOne(
       { _id: userId },
-      { $push: { notes: noteId } },
+      { $push: { notes: newNoteId } },
     );
   }
 

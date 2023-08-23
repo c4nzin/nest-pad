@@ -28,22 +28,22 @@ export class NoteService {
       author: user._id,
     });
 
-    await this.userService.updateArray(user._id, notepad._id);
+    await this.userService.addNoteToUser(user._id, notepad._id);
     return notepad.save();
   }
 
-  public async delete(
+  public async deleteNotepadById(
     notepadId: string,
     activeUserId: string,
   ): Promise<UserDocument> {
-    const note = await this.noteModel.findById({ _id: notepadId });
+    const noteToDelete = await this.noteModel.findById({ _id: notepadId });
     const user = await this.userService.findById(activeUserId);
 
-    if (!note) {
-      throw new BadRequestException('Notepad is not found');
+    if (!noteToDelete) {
+      throw new BadRequestException('Notepad not found');
     }
 
-    if (!note.author.equals(activeUserId)) {
+    if (!noteToDelete.author.equals(activeUserId)) {
       throw new BadRequestException(
         'You are not authorized to delete this note',
       );
@@ -56,11 +56,12 @@ export class NoteService {
 
     // Alternative one but it has only plain javascript.
     // I will use it temporarily.
-    user.notes = user.notes.filter((id) => id !== note._id);
+    user.notes = user.notes.filter((id) => id !== noteToDelete._id);
 
     return user.save();
   }
 
+  //Need to be refactored
   public async findNoteById(
     noteId: string,
     userId: Types.ObjectId | string,

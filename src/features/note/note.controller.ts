@@ -36,7 +36,7 @@ export class NoteController {
     @Param('id') noteId: string,
     @User('sub') userId: string,
   ): Promise<UserDocument> {
-    return this.noteService.delete(noteId, userId);
+    return this.noteService.deleteNotepadById(noteId, userId);
   }
 
   @Get(':id')
