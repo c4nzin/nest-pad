@@ -4,7 +4,8 @@ import * as argon2 from 'argon2';
 import { UserDocument } from '../user/user.schema';
 import { UserService } from '../user/user.service';
 import { LoginDto, RegisterDto } from './dto';
-import { TokenService } from 'src/helpers/tokens/token.service';
+import { TokenService } from 'src/features/auth/token.service';
+import { LoginReturnType } from './auth.controller';
 
 @Injectable()
 export class AuthService {
@@ -44,7 +45,7 @@ export class AuthService {
     return generateTokens.accessToken;
   }
 
-  public async login(loginDto: LoginDto): Promise<string> {
+  public async login(loginDto: LoginDto): Promise<LoginReturnType> {
     const user = await this.userService.findByUsername(loginDto.username);
 
     if (!user) {
@@ -65,7 +66,10 @@ export class AuthService {
       user.username,
     );
 
-    return generateTokens.accessToken;
+    return {
+      refreshToken: generateTokens.refreshToken,
+      accessToken: generateTokens.accessToken,
+    };
   }
 
   public async logout(userId: string): Promise<UserDocument> {

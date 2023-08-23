@@ -1,5 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { RegisterDto } from './dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto';
@@ -7,8 +6,12 @@ import { Message, User } from 'src/core/decorators/';
 
 import { AccessTokenGuard, RefreshTokenGuard } from 'src/core/guards/';
 import { ApiTags } from '@nestjs/swagger';
-import { TokenService } from 'src/helpers/tokens/token.service';
-import { UserDocument } from '../user/user.schema';
+import { TokenService } from 'src/features/auth/token.service';
+
+export type LoginReturnType = {
+  refreshToken: string;
+  accessToken: string;
+};
 
 @Controller()
 @ApiTags('Auth')
@@ -26,7 +29,7 @@ export class AuthController {
 
   @Message('Sucessfully logged in')
   @Post('login')
-  public async login(@Body() loginDto: LoginDto): Promise<string> {
+  public async login(@Body() loginDto: LoginDto): Promise<LoginReturnType> {
     return await this.authService.login(loginDto);
   }
 
@@ -40,10 +43,10 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @Message('Sucessfully refreshed the token')
   @Get('refresh')
-  public refreshTokens(@Req() request: Request): Promise<string> {
-    // Create a decorator to get user sub property
-    const userId = request.user['sub'];
-    const refreshToken = request.user['refreshToken'];
+  public refreshTokens(
+    @User('sub') userId: string,
+    @User('refreshToken') refreshToken: string,
+  ): Promise<string> {
     return this.tokenService.refreshToken(userId, refreshToken);
   }
 }

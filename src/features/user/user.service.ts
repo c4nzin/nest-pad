@@ -8,8 +8,8 @@ import { User, UserDocument } from './user.schema';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  public async create(createUserDto: RegisterDto): Promise<UserDocument> {
-    return new this.userModel(createUserDto);
+  public async create(registerDto: RegisterDto): Promise<UserDocument> {
+    return await new this.userModel(registerDto).save();
   }
 
   public async findById(
@@ -29,8 +29,8 @@ export class UserService {
   public findByUsernameAndEmail(
     email: string,
     username: string,
-  ): Promise<UserDocument> {
-    return this.userModel.findOne({ $or: [{ username }, { email }] });
+  ): Promise<UserDocument[]> {
+    return this.userModel.find({ $or: [{ email }, { username }] });
   }
 
   public async updateRefreshToken(

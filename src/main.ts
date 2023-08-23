@@ -32,7 +32,9 @@ async function bootstrap(): Promise<void> {
   app.useGlobalInterceptors(new TransformInterceptor(new Reflector()));
   app.setGlobalPrefix(config.GLOBAL_PREFIX);
   app.useGlobalInterceptors(new LoggingInterceptor(logger));
+
   setupSwagger(app);
+
   await app.listen(config.PORT);
 }
 bootstrap();

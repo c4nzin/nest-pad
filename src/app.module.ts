@@ -8,7 +8,6 @@ import { UserModule } from './features/user/user.module';
 import { NoteModule } from './features/note/note.module';
 import { APP_GUARD, RouterModule } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { TokenModule } from './helpers/tokens/token.module';
 import { FeatureModule } from './features/features.module';
 
 @Module({
@@ -20,7 +19,6 @@ import { FeatureModule } from './features/features.module';
     }),
     LoggerModule,
     DatabaseModule,
-    TokenModule,
     FeatureModule,
     RouterModule.register([
       { path: '/auth', module: AuthModule },
