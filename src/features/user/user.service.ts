@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, UpdateWriteOpResult } from 'mongoose';
 import { RegisterDto, RefreshTokenDto } from '../auth/dto';
 import { User, UserDocument } from './user.schema';
+import { NoteDocument } from '../note/note.schema';
 
 @Injectable()
 export class UserService {
@@ -26,7 +27,7 @@ export class UserService {
     return this.userModel.findOne({ username });
   }
 
-  public findByUsernameAndEmail(
+  public async findByUsernameAndEmail(
     email: string,
     username: string,
   ): Promise<UserDocument[]> {

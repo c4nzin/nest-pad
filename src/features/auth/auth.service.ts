@@ -20,13 +20,8 @@ export class AuthService {
       registerDto.username,
     );
 
-    if (isUserAlreadyExists.email) {
-      throw new BadRequestException('Email is already registered');
-    }
-
-    if (isUserAlreadyExists.username) {
-      throw new BadRequestException('User already exists');
-    }
+    if (isUserAlreadyExists.length > 0)
+      throw new BadRequestException('Username or email already registered');
 
     const hashedPassword = await this.tokenService.hashData(
       registerDto.password,
