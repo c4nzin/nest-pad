@@ -34,25 +34,30 @@ export class LoggingInterceptor implements NestInterceptor {
 
   private logSuccess(context: ExecutionContext): void {
     const ctx = context.switchToHttp();
-    const method = ctx.getRequest<Request>().method;
-    const url = ctx.getRequest<Request>().url;
-    const statusCode = ctx.getResponse<Response>().statusCode;
+    const { method, url } = ctx.getRequest<Request>();
+    const { statusCode } = ctx.getResponse<Response>();
 
-    this.logger.log(`Response: ${method} , ${url}, ${statusCode}`);
+    const message = `Outgoing Response : ${method} - ${url} - ${statusCode}`;
+
+    this.logger.log(message);
   }
 
   private logFailure(error: Error, context: ExecutionContext): void {
-    const ctx = context.switchToHttp();
-    const method = ctx.getRequest<Request>().method;
-    const url = ctx.getRequest<Request>().url;
-    const statusCode = ctx.getResponse<Response>().statusCode;
+    const ctx = context.switchToHttp().getRequest<Request>();
+    const { method, url } = ctx;
 
-    error instanceof HttpException
-      ? `Stack : ${statusCode}, ${method}, ${url} `
-      : this.logger.error(`Stack: ${method}, ${url}`, error.stack);
+    if (!(error instanceof HttpException)) {
+      const message = `Outgoing Response - ${method} - ${url}`;
+      return this.logger.error(message, error.stack);
+    }
 
-    statusCode >= HttpStatus.INTERNAL_SERVER_ERROR
-      ? this.logger.error(`Stack: ${statusCode}, ${method}, ${url}`)
-      : this.logger.log(`Stack: ${statusCode}, ${method}, ${url}`, error);
+    const statusCode = error.getStatus();
+    const message = `Outgoing response - ${statusCode} - ${method} - ${url}`;
+
+    if (statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      this.logger.error(message, error.stack);
+    }
+
+    this.logger.warn(message, error.message);
   }
 }

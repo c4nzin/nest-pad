@@ -31,8 +31,8 @@ async function bootstrap(): Promise<void> {
   app.useGlobalFilters(new ExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor(new Reflector()));
   app.setGlobalPrefix(config.GLOBAL_PREFIX);
-  app.useGlobalInterceptors(new LoggingInterceptor(logger));
 
+  app.useGlobalInterceptors(new LoggingInterceptor(logger));
   setupSwagger(app);
 
   await app.listen(config.PORT);
