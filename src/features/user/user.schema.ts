@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import cryptoRandomString from 'crypto-random-string';
+import randomString from 'randomstring';
+
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ timestamps: true })
@@ -36,7 +37,10 @@ export class User {
   public sessionToken: string;
 
   public generateSessionToken(): void {
-    this.sessionToken = cryptoRandomString({ length: 60, type: 'base64' });
+    this.sessionToken = randomString.generate({
+      length: 60,
+      charset: 'alphabetic',
+    });
   }
 }
 
