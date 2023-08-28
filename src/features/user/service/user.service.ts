@@ -45,7 +45,7 @@ export class UserService {
   ): Promise<UserDocument | NotFoundException> {
     const user = await this.getUserById(id);
 
-    if (!user) throw new NotFoundException('User is not found by id');
+    if (!user) throw new NotFoundException('User with the id was not found');
 
     return user;
   }
