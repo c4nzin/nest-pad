@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import randomString from 'randomstring';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -26,22 +25,8 @@ export class User {
 
   @Prop({ type: Types.ObjectId, default: [], ref: 'User' })
   public notes: Types.ObjectId[];
-
-  //Deprecated!!!
-  //Keeping this property only for project's stability.
   @Prop()
   public refreshToken: string;
-
-  //Will be using session token instead of storing refreshToken in the database.
-  @Prop({ type: String })
-  public sessionToken: string;
-
-  public generateSessionToken(): void {
-    this.sessionToken = randomString.generate({
-      length: 60,
-      charset: 'alphabetic',
-    });
-  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
