@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Get,
+  Put,
 } from '@nestjs/common';
 import { Message, User } from 'src/core/decorators';
 import { NoteService } from './note.service';
@@ -14,6 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateNotepadDto } from './dto/create-notepad.dto';
 import { NoteDocument } from './note.schema';
 import { UserDocument } from '../user/user.schema';
+import { UpdateNoteDto } from './dto/update-notepad.dto';
 
 @Controller()
 @UseGuards(AccessTokenGuard)
@@ -46,5 +48,15 @@ export class NoteController {
     @User('sub') userId: string,
   ): Promise<NoteDocument> {
     return this.noteService.findNoteById(noteId, userId);
+  }
+
+  @Put(':id/update')
+  @Message('Successfully updated the note')
+  public async updateNoteById(
+    @Param('id') noteId: string,
+    @User('sub') userId: string,
+    @Body() updateDto: UpdateNoteDto,
+  ): Promise<NoteDocument> {
+    return this.noteService.updateNoteById(noteId, userId, updateDto);
   }
 }

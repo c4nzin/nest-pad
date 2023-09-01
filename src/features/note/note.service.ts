@@ -9,6 +9,7 @@ import { Model, Types } from 'mongoose';
 import { CreateNotepadDto } from './dto';
 import { UserService } from '../user/user.service';
 import { UserDocument } from '../user/user.schema';
+import { UpdateNoteDto } from './dto/update-notepad.dto';
 
 @Injectable()
 export class NoteService {
@@ -72,5 +73,26 @@ export class NoteService {
       throw new UnauthorizedException('Access denied');
 
     return note;
+  }
+
+  public async updateNoteById(
+    noteId: string,
+    userId: Types.ObjectId | string,
+    updateDto: UpdateNoteDto,
+  ): Promise<NoteDocument> {
+    const note = await this.findNoteById(noteId, userId);
+
+    if (!note) {
+      throw new BadRequestException('Note not found');
+    }
+
+    if (!note.author.equals(userId)) {
+      throw new BadRequestException(
+        'You are not authorized to update this note',
+      );
+    }
+
+    note.set(updateDto);
+    return note.save();
   }
 }
