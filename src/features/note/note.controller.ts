@@ -55,8 +55,8 @@ export class NoteController {
   public async updateNoteById(
     @Param('id') noteId: string,
     @User('sub') userId: string,
-    @Body() updateDto: UpdateNoteDto,
+    @Body() updateNoteDto: UpdateNoteDto,
   ): Promise<NoteDocument> {
-    return this.noteService.updateNoteById(noteId, userId, updateDto);
+    return this.noteService.updateNoteById(noteId, userId, updateNoteDto);
   }
 }

@@ -25,8 +25,6 @@ export class User {
 
   @Prop({ type: Types.ObjectId, default: [], ref: 'User' })
   public notes: Types.ObjectId[];
-  @Prop()
-  public refreshToken: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
