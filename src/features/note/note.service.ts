@@ -78,7 +78,7 @@ export class NoteService {
   public async updateNoteById(
     noteId: string,
     userId: Types.ObjectId | string,
-    updateNoteDto: UpdateNoteDto,
+    updateDto: UpdateNoteDto,
   ): Promise<NoteDocument> {
     const note = await this.findNoteById(noteId, userId);
 
@@ -92,7 +92,7 @@ export class NoteService {
       );
     }
 
-    note.set(updateNoteDto);
+    note.set(updateDto);
     return note.save();
   }
 }
