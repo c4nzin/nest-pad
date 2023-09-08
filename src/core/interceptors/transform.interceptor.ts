@@ -15,24 +15,25 @@ import { MESSAGE_TOKEN } from '../decorators/message.decorator';
 export class TransformInterceptor<T>
   implements NestInterceptor<T, IResponse<T>>
 {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(private reflector: Reflector) {}
 
-  public async intercept(
+  intercept(
     context: ExecutionContext,
     next: CallHandler<T>,
-  ): Promise<Observable<any>> {
-    return next.handle().pipe(map((data) => this.modifyData(data, context)));
+  ): Observable<IResponse<T>> {
+    return next.handle().pipe(map((data) => this.transformData(data, context)));
   }
 
-  public async modifyData(
-    data: T,
-    context: ExecutionContext,
-  ): Promise<IResponse<T>> {
-    const ctx = context.switchToHttp().getResponse<Response>();
-    const statusCode = ctx.statusCode;
-    const method = ctx.req.method;
-    const handler = context.getHandler();
-    const message = this.reflector.get<string>(MESSAGE_TOKEN, handler);
+  private transformData(data: T, context: ExecutionContext): IResponse<T> {
+    const response = context.switchToHttp().getResponse<Response>();
+    const {
+      statusCode,
+      req: { method },
+    } = response;
+    const message = this.reflector.get<string>(
+      MESSAGE_TOKEN,
+      context.getHandler(),
+    );
 
     return { message, statusCode, method, data };
   }
