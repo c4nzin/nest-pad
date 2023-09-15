@@ -21,9 +21,13 @@ export class PipeValidation<T> implements PipeTransform {
       return value;
     }
 
-    const errMessages = errors.flatMap((error: ValidationError) =>
-      Object.values(error.constraints),
-    );
+    const errMessages: string[] = [];
+
+    errors.forEach((error: ValidationError) => {
+      Object.values(error.constraints).forEach((message) => {
+        errMessages.push(message);
+      });
+    });
 
     throw new BadRequestException(errMessages);
   }
