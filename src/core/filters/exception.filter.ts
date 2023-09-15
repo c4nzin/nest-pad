@@ -9,7 +9,7 @@ import { Response } from 'express';
 
 @Catch()
 export class ExceptionFilter<T> implements ExceptionFilter<T> {
-  public async catch(exception: T, host: ArgumentsHost): Promise<any> {
+  public async catch(exception: T, host: ArgumentsHost): Promise<T> {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
@@ -24,5 +24,6 @@ export class ExceptionFilter<T> implements ExceptionFilter<T> {
         : new InternalServerErrorException().getResponse();
 
     response.status(status).json(res);
+    return;
   }
 }

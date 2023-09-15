@@ -7,9 +7,15 @@ import {
 import { Observable } from 'rxjs';
 import { Response } from 'express';
 import { map } from 'rxjs/operators';
-import { IResponse } from '../interfaces';
 import { Reflector } from '@nestjs/core';
 import { MESSAGE_TOKEN } from '../decorators/message.decorator';
+
+interface IResponse<T> {
+  message: string;
+  data: T;
+  statusCode: number;
+  method: string;
+}
 
 @Injectable()
 export class TransformInterceptor<T>
@@ -17,7 +23,7 @@ export class TransformInterceptor<T>
 {
   constructor(private reflector: Reflector) {}
 
-  intercept(
+  public intercept(
     context: ExecutionContext,
     next: CallHandler<T>,
   ): Observable<IResponse<T>> {
