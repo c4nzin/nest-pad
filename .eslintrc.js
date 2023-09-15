@@ -23,7 +23,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/explicit-member-accessibility': 'off',
     '@typescript-eslint/ban-types': 'off',
-    'no-console': ['error'],
+    'no-console': ['warn'],
   },
   overrides: [
     {
