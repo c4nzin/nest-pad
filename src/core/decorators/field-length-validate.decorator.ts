@@ -13,12 +13,7 @@ export class FieldLengthValidator implements ValidatorConstraintInterface {
   ): Promise<boolean> {
     const [minLength, maxLength] = args.constraints;
 
-    const isOutOfRange = value.length < minLength || value.length > maxLength;
-    if (isOutOfRange) {
-      return true;
-    }
-
-    return false;
+    return value.length <= minLength || value.length >= maxLength;
   }
 
   public defaultMessage(validationArguments?: ValidationArguments): string {
