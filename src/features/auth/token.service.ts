@@ -1,22 +1,21 @@
 import {
   BadRequestException,
   ForbiddenException,
-  Inject,
   Injectable,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Config, ENV } from '../../config';
-import { UserService } from 'src/features/user/user.service';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
+import { UserService } from '../user/user.service';
 import * as argon2 from 'argon2';
-import { TokenResponse } from 'src/core/interfaces';
+import { TokenResponse } from '../../core/interfaces';
 import { Types } from 'mongoose';
+import { JwtConfigService } from 'src/modules/jwt/jwt-config.service';
 
 @Injectable()
 export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersService: UserService,
-    @Inject(ENV) private config: Config,
+    private readonly jwtConfigService: JwtConfigService,
   ) {}
 
   public async updateRefreshToken(
@@ -35,10 +34,7 @@ export class TokenService {
   ): Promise<string> {
     return this.jwtService.signAsync(
       { sub: userId, username },
-      {
-        secret: this.config.JWT_ACCESS_SECRET,
-        expiresIn: this.config.EXPIRES_IN,
-      },
+      this.getJwtOptions(),
     );
   }
 
@@ -48,10 +44,7 @@ export class TokenService {
   ): Promise<string> {
     return this.jwtService.signAsync(
       { sub: userId, username },
-      {
-        secret: this.config.JWT_REFRESH_SECRET,
-        expiresIn: this.config.REFRESH_TIME,
-      },
+      this.getJwtOptions(),
     );
   }
 
@@ -95,5 +88,9 @@ export class TokenService {
     await this.updateRefreshToken(userId, refreshToken);
 
     return { accessToken, refreshToken };
+  }
+
+  private getJwtOptions(): JwtSignOptions {
+    return this.jwtConfigService.createJwtOptions();
   }
 }
