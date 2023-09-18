@@ -1,6 +1,5 @@
-import { NestFactory, Reflector } from '@nestjs/core';
+import { Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { AppModule } from './app.module';
 import { Config, ENV } from './config';
 import { Logger } from 'nestjs-pino';
 import ExpressMongoSanitize from 'express-mongo-sanitize';
@@ -13,6 +12,8 @@ import { PipeValidation } from './core/pipes';
 export async function setupApp(app: NestExpressApplication): Promise<void> {
   const config = app.get<Config>(ENV);
   const logger = app.get<Logger>(Logger);
+
+  app.enableCors({ credentials: true });
 
   app.use(
     ExpressMongoSanitize({ allowDots: true, replaceWith: '_', dryRun: true }),
