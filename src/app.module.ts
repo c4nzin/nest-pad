@@ -20,14 +20,7 @@ import { FeatureModule } from './features/features.module';
     LoggerModule,
     DatabaseModule,
     FeatureModule,
-    RouterModule.register([
-      { path: '/auth', module: AuthModule },
-      { path: '/notes', module: NoteModule },
-      {
-        path: '/users',
-        module: UserModule,
-      },
-    ]),
+
     ThrottlerModule.forRootAsync({
       inject: [ENV],
       useFactory: (configService: Config) => ({
