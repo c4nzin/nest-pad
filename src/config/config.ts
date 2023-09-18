@@ -11,6 +11,7 @@ const config = {
   REFRESH_TIME: str({ default: '1d' }),
   THROTTLE_TTL: num({ default: 60 }),
   THROTTLE_LIMIT: num({ default: 10 }),
+  ORIGIN: str({ default: 'http://localhost:3000' }),
 };
 
 export const validators = makeValidators(config);

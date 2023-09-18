@@ -13,7 +13,7 @@ export async function setupApp(app: NestExpressApplication): Promise<void> {
   const config = app.get<Config>(ENV);
   const logger = app.get<Logger>(Logger);
 
-  app.enableCors({ credentials: true });
+  app.enableCors({ credentials: true, origin: config.ORIGIN });
 
   app.use(
     ExpressMongoSanitize({ allowDots: true, replaceWith: '_', dryRun: true }),
