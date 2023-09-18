@@ -4,12 +4,11 @@ import { Request } from 'express';
 import { Inject, Injectable } from '@nestjs/common';
 import { Config, ENV } from 'src/config';
 import { JwtPayload } from 'src/core/interfaces';
-import { JWT_REFRESH } from './strategy.constants';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  JWT_REFRESH,
+  'jwt-refresh',
 ) {
   constructor(@Inject(ENV) private readonly configService: Config) {
     super({
