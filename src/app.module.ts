@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { EnvalidModule } from 'nestjs-envalid';
-import { Config, ENV, validators } from './config';
+import { validators } from './config';
 import { DatabaseModule } from './modules/database/database.module';
 import { LoggerModule } from './modules/logger/logger.module';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { FeatureModule } from './features/features.module';
 import { JwtModule } from './modules/jwt/jwt.module';
+import { ThrottlerModule } from './modules/throttler-module/throttler.module';
 
 @Module({
   imports: [
@@ -19,19 +18,7 @@ import { JwtModule } from './modules/jwt/jwt.module';
     DatabaseModule,
     FeatureModule,
     JwtModule,
-    ThrottlerModule.forRootAsync({
-      inject: [ENV],
-      useFactory: (configService: Config) => ({
-        ttl: configService.THROTTLE_TTL,
-        limit: configService.THROTTLE_LIMIT,
-      }),
-    }),
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    ThrottlerModule,
   ],
 })
 export class AppModule {}
