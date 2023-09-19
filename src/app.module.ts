@@ -5,7 +5,7 @@ import { DatabaseModule } from './modules/database/database.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { FeatureModule } from './features/features.module';
 import { JwtModule } from './modules/jwt/jwt.module';
-import { ThrottlerModule } from './modules/throttler-module/throttler.module';
+import { ThrottlerModule } from './modules/throttler/throttler.module';
 
 @Module({
   imports: [
