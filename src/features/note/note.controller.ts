@@ -16,6 +16,7 @@ import { CreateNotepadDto } from './dto/create-notepad.dto';
 import { NoteDocument } from './note.schema';
 import { UserDocument } from '../user/user.schema';
 import { UpdateNoteDto } from './dto/update-notepad.dto';
+import { ObjectIdPipeValidation } from 'src/core/pipes';
 
 @Controller()
 @UseGuards(AccessTokenGuard)
@@ -31,12 +32,11 @@ export class NoteController {
   ): Promise<NoteDocument> {
     return this.noteService.create(createNotepadDto, username);
   }
-
   @Delete(':id')
   @Message('Sucessfully deleted the note')
   public async deleteNoteById(
-    @Param('id') noteId: string,
-    @User('sub') userId: string,
+    @Param('id', new ObjectIdPipeValidation()) noteId: string,
+    @User('sub', new ObjectIdPipeValidation()) userId: string,
   ): Promise<UserDocument> {
     return this.noteService.deleteNotepadById(noteId, userId);
   }
@@ -44,8 +44,8 @@ export class NoteController {
   @Get(':id')
   @Message('Successfully fetched the note')
   public async findNoteById(
-    @Param('id') noteId: string,
-    @User('sub') userId: string,
+    @Param('id', new ObjectIdPipeValidation()) noteId: string,
+    @User('sub', new ObjectIdPipeValidation()) userId: string,
   ): Promise<NoteDocument> {
     return this.noteService.findNoteById(noteId, userId);
   }
@@ -53,8 +53,8 @@ export class NoteController {
   @Put(':id/update')
   @Message('Successfully updated the note')
   public async updateNoteById(
-    @Param('id') noteId: string,
-    @User('sub') userId: string,
+    @Param('id', new ObjectIdPipeValidation()) noteId: string,
+    @User('sub', new ObjectIdPipeValidation()) userId: string,
     @Body() updateDto: UpdateNoteDto,
   ): Promise<NoteDocument> {
     return this.noteService.updateNoteById(noteId, userId, updateDto);

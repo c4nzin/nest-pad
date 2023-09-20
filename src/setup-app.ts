@@ -28,6 +28,4 @@ export async function setupApp(app: NestExpressApplication): Promise<void> {
   app.useGlobalInterceptors(new LoggingInterceptor(logger));
 
   app.setGlobalPrefix(config.GLOBAL_PREFIX);
-
-  await app.listen(config.PORT);
 }

@@ -25,7 +25,7 @@ export class AuthService {
 
     const hashedPassword = await argon2.hash(registerDto.password);
 
-    const createdUser = await this.userService.create({
+    const createdUser = await this.userService.createUser({
       ...registerDto,
       password: hashedPassword,
     });
