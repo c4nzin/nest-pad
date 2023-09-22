@@ -44,7 +44,7 @@ export class TokenService {
   ): Promise<string> {
     return this.jwtService.signAsync(
       { sub: userId, username },
-      this.getJwtOptions(),
+      this.getRefreshToken(),
     );
   }
 
@@ -92,5 +92,9 @@ export class TokenService {
 
   private getJwtOptions(): JwtSignOptions {
     return this.jwtConfigService.createJwtOptions();
+  }
+
+  private getRefreshToken(): JwtSignOptions {
+    return this.jwtConfigService.createJwtRefreshToken();
   }
 }

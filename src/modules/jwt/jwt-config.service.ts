@@ -11,4 +11,11 @@ export class JwtConfigService implements JwtOptionsFactory {
       expiresIn: this.config.EXPIRES_IN,
     };
   }
+
+  public createJwtRefreshToken(): JwtSignOptions {
+    return {
+      secret: this.config.JWT_REFRESH_SECRET,
+      expiresIn: this.config.EXPIRES_IN,
+    };
+  }
 }
