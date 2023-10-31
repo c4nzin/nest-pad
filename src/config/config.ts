@@ -12,6 +12,9 @@ const config = {
   THROTTLE_TTL: num({ default: 60 }),
   THROTTLE_LIMIT: num({ default: 10 }),
   ORIGIN: str({ default: 'http://localhost:3000' }),
+  CLOUD_NAME: str(),
+  CLOUDINARY_API_KEY: num(),
+  CLOUDINARY_API_SECRET: str(),
 };
 
 export const validators = makeValidators(config);
