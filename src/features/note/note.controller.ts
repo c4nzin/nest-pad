@@ -24,7 +24,7 @@ import { ObjectIdPipeValidation } from 'src/core/pipes';
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
-  @Post('create')
+  @Post()
   @Message('Sucessfully created the note')
   public async createNote(
     @Body() createNotepadDto: CreateNotepadDto,
@@ -50,7 +50,7 @@ export class NoteController {
     return this.noteService.findNoteById(noteId, userId);
   }
 
-  @Put(':id/update')
+  @Put(':id')
   @Message('Successfully updated the note')
   public async updateNoteById(
     @Param('id', new ObjectIdPipeValidation()) noteId: string,
