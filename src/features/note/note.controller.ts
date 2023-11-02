@@ -7,6 +7,8 @@ import {
   Param,
   Get,
   Put,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { Message, User } from 'src/core/decorators';
 import { NoteService } from './note.service';
@@ -17,12 +19,17 @@ import { NoteDocument } from './note.schema';
 import { UserDocument } from '../user/user.schema';
 import { UpdateNoteDto } from './dto/update-notepad.dto';
 import { ObjectIdPipeValidation } from 'src/core/pipes';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService } from 'nestjs-cloudinary';
 
 @Controller()
 @UseGuards(AccessTokenGuard)
 @ApiTags('Notes')
 export class NoteController {
-  constructor(private readonly noteService: NoteService) {}
+  constructor(
+    private readonly noteService: NoteService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Post()
   @Message('Sucessfully created the note')
@@ -58,5 +65,12 @@ export class NoteController {
     @Body() updateDto: UpdateNoteDto,
   ): Promise<NoteDocument> {
     return this.noteService.updateNoteById(noteId, userId, updateDto);
+  }
+
+  @Post('upload')
+  @Message('Successfully uploaded the file')
+  @UseInterceptors(FileInterceptor)
+  public async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    return this.cloudinaryService.uploadFile(file);
   }
 }

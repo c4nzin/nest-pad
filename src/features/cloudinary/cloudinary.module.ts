@@ -10,6 +10,7 @@ import { Config } from 'src/config';
         cloud_name: configService.CLOUD_NAME,
         api_key: configService.CLOUDINARY_API_KEY,
         api_secret: configService.CLOUDINARY_API_SECRET,
+        secure: false,
       }),
     }),
   ],
