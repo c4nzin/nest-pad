@@ -9,6 +9,11 @@ import {
   Put,
   UseInterceptors,
   UploadedFile,
+  UsePipes,
+  MaxFileSizeValidator,
+  ParseArrayPipe,
+  ParseFilePipe,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { Message, User } from 'src/core/decorators';
 import { NoteService } from './note.service';
@@ -71,7 +76,18 @@ export class NoteController {
   @Post('upload')
   @Message('Successfully uploaded the file')
   @UseInterceptors(FileInterceptor)
-  public async uploadFile(@UploadedFile('file') file: Express.Multer.File) {
+  @UsePipes(MaxFileSizeValidator)
+  public async uploadFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({ fileType: 'pdf' }),
+          new MaxFileSizeValidator({ maxSize: 10000 }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
     return this.cloudinaryService.uploadFile(file, {
       allowed_formats: ['pdf'],
       format: 'pdf',
