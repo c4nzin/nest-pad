@@ -21,6 +21,7 @@ import { UpdateNoteDto } from './dto/update-notepad.dto';
 import { ObjectIdPipeValidation } from 'src/core/pipes';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'nestjs-cloudinary';
+import { Express } from 'express';
 
 @Controller()
 @UseGuards(AccessTokenGuard)
@@ -70,7 +71,7 @@ export class NoteController {
   @Post('upload')
   @Message('Successfully uploaded the file')
   @UseInterceptors(FileInterceptor)
-  public async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  public async uploadFile(@UploadedFile('file') file: Express.Multer.File) {
     return this.cloudinaryService.uploadFile(file, {
       allowed_formats: ['pdf'],
       format: 'pdf',
