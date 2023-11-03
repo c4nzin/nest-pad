@@ -71,6 +71,9 @@ export class NoteController {
   @Message('Successfully uploaded the file')
   @UseInterceptors(FileInterceptor)
   public async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return this.cloudinaryService.uploadFile(file);
+    return this.cloudinaryService.uploadFile(file, {
+      allowed_formats: ['pdf'],
+      format: 'pdf',
+    });
   }
 }
