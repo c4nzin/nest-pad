@@ -32,8 +32,8 @@ export class UserRepository {
     return user;
   }
 
-  public findByUsername(username: string): Promise<UserDocument> {
-    return this.findByUsername(username);
+  public async findByUsername(username: string): Promise<UserDocument> {
+    return await this.userModel.findOne({ username });
   }
 
   public findUserById(userId: string | Types.ObjectId): Promise<UserDocument> {

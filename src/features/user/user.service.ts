@@ -23,8 +23,8 @@ export class UserService {
     return this.userRepository.findByEmail(email);
   }
 
-  public findByUsername(username: string): Promise<UserDocument> {
-    return this.userRepository.findByUsername(username);
+  public async findByUsername(username: string): Promise<UserDocument> {
+    return await this.userRepository.findByUsername(username);
   }
 
   public async findByUsernameAndEmail(
@@ -44,7 +44,6 @@ export class UserService {
     );
   }
 
-  //C.....
   public async addNoteToUser(
     loggedUserId: string | Types.ObjectId,
     newNoteId: Types.ObjectId,
