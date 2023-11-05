@@ -1,6 +1,5 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import * as argon2 from 'argon2';
-
+import * as bcrypt from 'bcrypt';
 import { UserDocument } from '../user/user.schema';
 import { UserService } from '../user/user.service';
 import { LoginDto, RegisterDto } from './dto';
@@ -24,7 +23,7 @@ export class AuthService {
       throw new BadRequestException('Username or email already registered');
     }
 
-    const hashedPassword = await argon2.hash(registerDto.password);
+    const hashedPassword = await bcrypt.hashSync(registerDto.password, 10);
 
     const createdUser = await this.userService.createUser({
       ...registerDto,
@@ -46,9 +45,9 @@ export class AuthService {
       throw new BadRequestException('User does not exist');
     }
 
-    const isPasswordMatches = await argon2.verify(
-      user.password,
+    const isPasswordMatches = await bcrypt.compareSync(
       loginDto.password,
+      user.password,
     );
 
     if (!isPasswordMatches) {
