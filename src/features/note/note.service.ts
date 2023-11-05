@@ -10,27 +10,22 @@ import { CreateNotepadDto } from './dto';
 import { UserService } from '../user/user.service';
 import { UserDocument } from '../user/user.schema';
 import { UpdateNoteDto } from './dto/update-notepad.dto';
+import { NoteRepository } from './repositories/note.repositories';
 
 @Injectable()
 export class NoteService {
   constructor(
     @InjectModel(Note.name) private noteModel: Model<NoteDocument>,
     private readonly userService: UserService,
+    //New
+    private readonly noteRepository: NoteRepository,
   ) {}
 
   public async create(
     createNotepadDto: CreateNotepadDto,
     username: string,
   ): Promise<NoteDocument> {
-    const user = await this.userService.findByUsername(username);
-
-    const notepad = await this.noteModel.create({
-      ...createNotepadDto,
-      author: user._id,
-    });
-
-    await this.userService.addNoteToUser(user._id, notepad._id);
-    return notepad.save();
+    return this.noteRepository.createNote(createNotepadDto, username);
   }
 
   public async deleteNotepadById(
