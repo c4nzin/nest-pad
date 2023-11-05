@@ -11,7 +11,9 @@ export function setupSwagger(app: NestExpressApplication): void {
     .addTag('notes')
     .build();
 
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  const document = SwaggerModule.createDocument(app, swaggerConfig, {
+    deepScanRoutes: true,
+  });
 
   SwaggerModule.setup(config.GLOBAL_PREFIX, app, document);
 }
