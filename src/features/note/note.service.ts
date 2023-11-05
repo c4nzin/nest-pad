@@ -10,7 +10,7 @@ import { CreateNotepadDto } from './dto';
 import { UserService } from '../user/user.service';
 import { UserDocument } from '../user/user.schema';
 import { UpdateNoteDto } from './dto/update-notepad.dto';
-import { NoteRepository } from './repositories/note.repositories';
+import { NoteRepository } from './repositories/note.repository';
 
 @Injectable()
 export class NoteService {
@@ -33,11 +33,7 @@ export class NoteService {
     activeUserId: string,
   ): Promise<UserDocument> {
     return this.noteRepository.removeNotepad(notepadId, activeUserId);
-    // Somehow this code ain't running. Will be fixed soon
     // NEED TO BE FIXED: await this.usersService.deleteItemFromArray(requestId, toDeleteNotepadId);
-    // Alternative one but it has only plain javascript.
-    // I will use it temporarily.
-    // user.notes = user.notes.filter((id) => id !== noteToDelete._id);
   }
 
   //Need to be refactored
@@ -45,12 +41,7 @@ export class NoteService {
     noteId: string,
     userId: Types.ObjectId | string,
   ): Promise<NoteDocument> {
-    const note = await this.noteModel.findById({ _id: noteId });
-
-    if (!note.author._id.equals(userId) || !note)
-      throw new UnauthorizedException('Access denied');
-
-    return note;
+    return this.noteRepository.findNote(noteId, userId);
   }
 
   public async updateNoteById(

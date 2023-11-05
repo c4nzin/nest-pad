@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Note, NoteDocument } from '../note.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UserService } from 'src/features/user/user.service';
 import { CreateNotepadDto } from '../dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -46,5 +46,15 @@ export class NoteRepository {
     }
 
     return this.noteModel.findByIdAndDelete(notepad._id) && user.save();
+  }
+
+  public async findNote(noteId: string, loggedUserId: string | Types.ObjectId) {
+    const notepad = await this.noteModel.findById({ _id: noteId });
+
+    if (!notepad.author.equals(loggedUserId)) {
+      throw new UnauthorizedException('Access Denied!');
+    }
+
+    return notepad;
   }
 }
