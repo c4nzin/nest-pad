@@ -58,7 +58,7 @@ export class UserService {
     return await this.userRepository.deleteNote(loggedUserId, noteId);
   }
 
-  public async loggedUser(loggedUserIdd: string): Promise<UserDocument> {
-    return this.userRepository.loggedUser(loggedUserIdd);
+  public async loggedUser(username: string): Promise<UserDocument> {
+    return this.userRepository.loggedUser(username);
   }
 }

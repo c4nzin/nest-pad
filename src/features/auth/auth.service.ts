@@ -50,7 +50,7 @@ export class AuthService {
       user.password,
     );
 
-    if (!isPasswordMatches) {
+    if (isPasswordMatches) {
       throw new BadRequestException('Password is not correct');
     }
 

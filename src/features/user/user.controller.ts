@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from 'src/core/guards';
 import { Message, User } from 'src/core/decorators';
+import { User as IUser } from './user.schema';
 
 @Controller()
 @UseGuards(AccessTokenGuard)
@@ -10,9 +11,9 @@ import { Message, User } from 'src/core/decorators';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('current')
+  @Get('me')
   @Message('Succesffully fetched the logged user')
-  public getLoggedUser(@User('sub') id: string) {
-    return this.userService.loggedUser(id);
+  public getLoggedUser(@User() user: IUser) {
+    return this.userService.loggedUser(user.username);
   }
 }

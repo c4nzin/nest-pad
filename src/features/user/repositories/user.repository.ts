@@ -33,7 +33,7 @@ export class UserRepository {
   }
 
   public async findByUsername(username: string): Promise<UserDocument> {
-    return await this.userModel.findOne({ username });
+    return this.validateFindByUsername(username);
   }
 
   public findUserById(userId: string | Types.ObjectId): Promise<UserDocument> {
@@ -94,15 +94,15 @@ export class UserRepository {
     );
   }
 
-  public async validateLoggedUser(loggedUserId: string): Promise<UserDocument> {
-    const user = await this.userModel.findById(loggedUserId);
+  public async validateLoggedUser(username: string): Promise<UserDocument> {
+    const user = await this.findByUsername(username);
 
     if (!user) throw new NotFoundException('No user found');
 
     return user;
   }
 
-  public async loggedUser(loggedUserId: string): Promise<UserDocument> {
-    return this.validateLoggedUser(loggedUserId);
+  public async loggedUser(username: string): Promise<UserDocument> {
+    return this.validateLoggedUser(username);
   }
 }
