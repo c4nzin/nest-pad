@@ -43,25 +43,12 @@ export class NoteService {
   ): Promise<NoteDocument> {
     return this.noteRepository.findNote(noteId, userId);
   }
+  1;
 
   public async updateNoteById(
     noteId: string,
     userId: Types.ObjectId | string,
     updateDto: UpdateNoteDto,
   ): Promise<NoteDocument> {
-    const note = await this.findNoteById(noteId, userId);
-
-    if (!note) {
-      throw new BadRequestException('Note not found');
-    }
-
-    if (!note.author.equals(userId)) {
-      throw new BadRequestException(
-        'You are not authorized to update this note',
-      );
-    }
-
-    note.set(updateDto);
-    return note.save();
-  }
+    return this.noteRepository.updateNotepad(noteId,userId,updateDto)
 }

@@ -9,6 +9,8 @@ import { Model, Types } from 'mongoose';
 import { UserService } from 'src/features/user/user.service';
 import { CreateNotepadDto } from '../dto';
 import { InjectModel } from '@nestjs/mongoose';
+import { UpdateNoteDto } from '../dto/update-notepad.dto';
+import { UserDocument } from 'src/features/user/user.schema';
 
 @Injectable()
 export class NoteRepository {
@@ -33,7 +35,10 @@ export class NoteRepository {
     return notepad.save();
   }
 
-  public async removeNotepad(noteId: string, loggedUserId: string) {
+  public async removeNotepad(
+    noteId: string,
+    loggedUserId: string,
+  ): Promise<UserDocument> {
     const notepad = await this.noteModel.findById(noteId);
     const user = await this.userService.findById(loggedUserId);
 
@@ -48,7 +53,10 @@ export class NoteRepository {
     return this.noteModel.findByIdAndDelete(notepad._id) && user.save();
   }
 
-  public async findNote(noteId: string, loggedUserId: string | Types.ObjectId) {
+  public async findNote(
+    noteId: string,
+    loggedUserId: string | Types.ObjectId,
+  ): Promise<NoteDocument> {
     const notepad = await this.noteModel.findById({ _id: noteId });
 
     if (!notepad.author.equals(loggedUserId)) {
@@ -56,5 +64,24 @@ export class NoteRepository {
     }
 
     return notepad;
+  }
+
+  public async updateNotepad(
+    noteId: string,
+    loggedUserId: string | Types.ObjectId,
+    updateDto: UpdateNoteDto,
+  ) {
+    const notepad = await this.noteModel.findById(noteId);
+
+    if (!notepad) throw new BadRequestException('Note not found');
+
+    if (!notepad.author.equals(loggedUserId)) {
+      throw new UnauthorizedException(
+        'You are not authorized to modify this note',
+      );
+    }
+
+    notepad.set(updateDto);
+    return notepad.save({ timestamps: true });
   }
 }
