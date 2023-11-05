@@ -42,4 +42,8 @@ export class UserRepository {
   public findByEmail(email: string) {
     return this.findByEmail(email);
   }
+
+  public async findByUsenameAndMail(email: string, username: string) {
+    return await this.userModel.find({ $or: [{ email }, { username }] });
+  }
 }
