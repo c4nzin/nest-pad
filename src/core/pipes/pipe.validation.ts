@@ -13,7 +13,10 @@ export class PipeValidation<T> implements PipeTransform {
     if (!metatype || !this.toValidate(metatype)) return value;
 
     const object = plainToInstance(metatype, value);
-    const errors = await validate(object, { whitelist: true });
+    const errors = await validate(object, {
+      whitelist: true,
+      forbidUnknownValues: false,
+    });
 
     if (errors.length === 0) return value;
 
