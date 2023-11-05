@@ -1,25 +1,14 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Note, NoteDocument } from './note.schema';
-import { Model, Types } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { NoteDocument } from './note.schema';
+import { Types } from 'mongoose';
 import { CreateNotepadDto } from './dto';
-import { UserService } from '../user/user.service';
 import { UserDocument } from '../user/user.schema';
 import { UpdateNoteDto } from './dto/update-notepad.dto';
 import { NoteRepository } from './repositories/note.repository';
 
 @Injectable()
 export class NoteService {
-  constructor(
-    @InjectModel(Note.name) private noteModel: Model<NoteDocument>,
-    private readonly userService: UserService,
-    //New
-    private readonly noteRepository: NoteRepository,
-  ) {}
+  constructor(private readonly noteRepository: NoteRepository) {}
 
   public async create(
     createNotepadDto: CreateNotepadDto,
