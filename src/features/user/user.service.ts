@@ -1,71 +1,65 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types, UpdateWriteOpResult } from 'mongoose';
+import { FilterQuery, Model, Types, UpdateWriteOpResult } from 'mongoose';
 import { RegisterDto, RefreshTokenDto } from '../auth/dto';
 import { User, UserDocument } from './user.schema';
+import { UserRepository } from './repositories/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   public async createUser(registerDto: RegisterDto): Promise<UserDocument> {
-    return await new this.userModel(registerDto).save();
+    return this.userRepository.createUser(registerDto);
   }
 
   public async findById(
     userId: string | Types.ObjectId,
   ): Promise<UserDocument> {
-    return this.userModel.findById({ _id: userId });
+    return this.userRepository.findUserById(userId);
   }
 
   public async findByEmail(email: string): Promise<UserDocument> {
-    return this.userModel.findOne({ email });
+    return this.userRepository.findByEmail(email);
   }
 
   public findByUsername(username: string): Promise<UserDocument> {
-    return this.userModel.findOne({ username });
+    return this.userRepository.findByUsername(username);
   }
 
   public async findByUsernameAndEmail(
     email: string,
     username: string,
-  ): Promise<UserDocument[]> {
-    return await this.userModel.find({ $or: [{ email }, { username }] });
+  ): Promise<FilterQuery<UserDocument>> {
+    return await this.userRepository.findByUsenameAndMail(email, username);
   }
 
   public async updateRefreshToken(
-    id: string | Types.ObjectId,
+    loggedUserId: string | Types.ObjectId,
     updateDto: RefreshTokenDto,
   ): Promise<UserDocument> {
-    return await this.userModel.findByIdAndUpdate(id, updateDto, { new: true });
+    return await this.userRepository.updateRefreshToken(
+      loggedUserId,
+      updateDto,
+    );
   }
 
   //C.....
   public async addNoteToUser(
-    userId: string | Types.ObjectId,
+    loggedUserId: string | Types.ObjectId,
     newNoteId: Types.ObjectId,
   ): Promise<UpdateWriteOpResult> {
-    return await this.userModel.updateOne(
-      { _id: userId },
-      { $push: { notes: newNoteId } },
-    );
+    return await this.userRepository.addNoteToUser(loggedUserId, newNoteId);
   }
 
   public async deleteItemFromArray(
-    userId: string,
+    loggedUserId: string,
     noteId: string,
   ): Promise<UpdateWriteOpResult> {
-    return await this.userModel.updateOne(
-      { _id: userId },
-      { $pull: { notes: noteId } },
-    );
+    return await this.userRepository.deleteNote(loggedUserId, noteId);
   }
 
-  public async loggedUser(id: string) {
-    const user = await this.findById(id);
-
-    if (!user) throw new NotFoundException('No user found');
-
-    return user;
+  public async loggedUser(loggedUserIdd: string): Promise<UserDocument> {
+    return this.userRepository.loggedUser(loggedUserIdd);
   }
 }

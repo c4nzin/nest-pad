@@ -5,9 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../user.schema';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model, Types, UpdateWriteOpResult } from 'mongoose';
 import { RefreshTokenDto, RegisterDto } from 'src/features/auth/dto';
-import { NoteDocument } from 'src/features/note/note.schema';
 
 @Injectable()
 export class UserRepository {
@@ -23,6 +22,18 @@ export class UserRepository {
     }
 
     return user;
+  }
+
+  public async validateFindByUsername(username: string): Promise<UserDocument> {
+    const user = await this.userModel.findOne({ username });
+
+    if (!user) throw new NotFoundException('No user found');
+
+    return user;
+  }
+
+  public findByUsername(username: string): Promise<UserDocument> {
+    return this.findByUsername(username);
   }
 
   public findUserById(userId: string | Types.ObjectId): Promise<UserDocument> {
@@ -61,5 +72,37 @@ export class UserRepository {
     return await this.userModel.findByIdAndUpdate(loggedUserId, update, {
       new: true,
     });
+  }
+
+  public async addNoteToUser(
+    loggedUserId: string | Types.ObjectId,
+    noteId: Types.ObjectId,
+  ): Promise<UpdateWriteOpResult> {
+    return await this.userModel.updateOne(
+      { _id: loggedUserId },
+      { $push: { notes: noteId } },
+    );
+  }
+
+  public async deleteNote(
+    loggedUserId: string,
+    noteId: string,
+  ): Promise<UpdateWriteOpResult> {
+    return await this.userModel.updateOne(
+      { _id: loggedUserId },
+      { $pull: { notes: noteId } },
+    );
+  }
+
+  public async validateLoggedUser(loggedUserId: string): Promise<UserDocument> {
+    const user = await this.userModel.findById(loggedUserId);
+
+    if (!user) throw new NotFoundException('No user found');
+
+    return user;
+  }
+
+  public async loggedUser(loggedUserId: string): Promise<UserDocument> {
+    return this.validateLoggedUser(loggedUserId);
   }
 }
