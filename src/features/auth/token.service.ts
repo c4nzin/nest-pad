@@ -5,10 +5,11 @@ import {
 } from '@nestjs/common';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
-import * as argon2 from 'argon2';
 import { TokenResponse } from '../../core/interfaces';
 import { Types } from 'mongoose';
 import { JwtConfigService } from 'src/modules/jwt/jwt-config.service';
+import * as bcrypt from 'bcrypt';
+import { UserDocument } from '../user/user.schema';
 
 @Injectable()
 export class TokenService {
@@ -21,9 +22,9 @@ export class TokenService {
   public async updateRefreshToken(
     userId: string | Types.ObjectId,
     refreshToken: string,
-  ): Promise<void> {
-    const hashedRefreshToken = await argon2.hash(refreshToken);
-    await this.usersService.updateRefreshToken(userId, {
+  ): Promise<UserDocument> {
+    const hashedRefreshToken = await bcrypt.hashSync(refreshToken, 10);
+    return await this.usersService.updateRefreshToken(userId, {
       refreshToken: hashedRefreshToken,
     });
   }
@@ -60,7 +61,7 @@ export class TokenService {
       throw new ForbiddenException('Refresh token is not found');
     }
 
-    const isRefreshTokenValid = await argon2.verify(
+    const isRefreshTokenValid = await bcrypt.compareSync(
       user.refreshToken,
       refreshToken,
     );
