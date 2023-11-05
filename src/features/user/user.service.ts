@@ -30,21 +30,22 @@ export class UserService {
     email: string,
     username: string,
   ): Promise<UserDocument[]> {
-    return this.userModel.find({ $or: [{ email }, { username }] });
+    return await this.userModel.find({ $or: [{ email }, { username }] });
   }
 
   public async updateRefreshToken(
     id: string | Types.ObjectId,
     updateDto: RefreshTokenDto,
   ): Promise<UserDocument> {
-    return this.userModel.findByIdAndUpdate(id, updateDto, { new: true });
+    return await this.userModel.findByIdAndUpdate(id, updateDto, { new: true });
   }
 
+  //C.....
   public async addNoteToUser(
     userId: string | Types.ObjectId,
     newNoteId: Types.ObjectId,
   ): Promise<UpdateWriteOpResult> {
-    return this.userModel.updateOne(
+    return await this.userModel.updateOne(
       { _id: userId },
       { $push: { notes: newNoteId } },
     );
@@ -54,7 +55,7 @@ export class UserService {
     userId: string,
     noteId: string,
   ): Promise<UpdateWriteOpResult> {
-    return this.userModel.updateOne(
+    return await this.userModel.updateOne(
       { _id: userId },
       { $pull: { notes: noteId } },
     );
