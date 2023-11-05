@@ -30,4 +30,16 @@ export class UserRepository {
   public async createUser(registerDto: RegisterDto) {
     return await new this.userModel(registerDto).save();
   }
+
+  public async validateFindByEmail(email: string) {
+    const user = await this.userModel.findOne({ email });
+
+    if (!user) {
+      throw new NotFoundException('No user with this email');
+    }
+  }
+
+  public findByEmail(email: string) {
+    return this.findByEmail(email);
+  }
 }
