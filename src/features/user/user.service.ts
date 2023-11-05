@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, UpdateWriteOpResult } from 'mongoose';
 import { RegisterDto, RefreshTokenDto } from '../auth/dto';
 import { User, UserDocument } from './user.schema';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -58,5 +59,13 @@ export class UserService {
       { _id: userId },
       { $pull: { notes: noteId } },
     );
+  }
+
+  public async loggedUser(id: string) {
+    const user = await this.findById(id);
+
+    if (!user) throw new NotFoundException('No user found');
+
+    return user;
   }
 }
