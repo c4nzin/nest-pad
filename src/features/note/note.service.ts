@@ -50,5 +50,6 @@ export class NoteService {
     userId: Types.ObjectId | string,
     updateDto: UpdateNoteDto,
   ): Promise<NoteDocument> {
-    return this.noteRepository.updateNotepad(noteId,userId,updateDto)
+    return this.noteRepository.updateNotepad(noteId, userId, updateDto);
+  }
 }
