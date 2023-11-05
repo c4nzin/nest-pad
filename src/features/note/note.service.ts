@@ -32,29 +32,12 @@ export class NoteService {
     notepadId: string,
     activeUserId: string,
   ): Promise<UserDocument> {
-    const noteToDelete = await this.noteModel.findById({ _id: notepadId });
-    const user = await this.userService.findById(activeUserId);
-
-    if (!noteToDelete) {
-      throw new BadRequestException('Notepad not found');
-    }
-
-    if (!noteToDelete.author.equals(activeUserId)) {
-      throw new BadRequestException(
-        'You are not authorized to delete this note',
-      );
-    }
-
-    await this.noteModel.findByIdAndDelete(notepadId);
-
+    return this.noteRepository.removeNotepad(notepadId, activeUserId);
     // Somehow this code ain't running. Will be fixed soon
     // NEED TO BE FIXED: await this.usersService.deleteItemFromArray(requestId, toDeleteNotepadId);
-
     // Alternative one but it has only plain javascript.
     // I will use it temporarily.
-    user.notes = user.notes.filter((id) => id !== noteToDelete._id);
-
-    return user.save();
+    // user.notes = user.notes.filter((id) => id !== noteToDelete._id);
   }
 
   //Need to be refactored
