@@ -6,6 +6,7 @@ import { LoggerModule } from './modules/logger/logger.module';
 import { FeatureModule } from './features/features.module';
 import { JwtModule } from './modules/jwt/jwt.module';
 import { ThrottlerModule } from './modules/throttler/throttler.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ThrottlerModule } from './modules/throttler/throttler.module';
     FeatureModule,
     JwtModule,
     ThrottlerModule,
+    HealthModule,
   ],
 })
 export class AppModule {}

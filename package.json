@@ -15,6 +15,7 @@
     "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix"
   },
   "dependencies": {
+    "@nestjs/axios": "^3.0.1",
     "@nestjs/common": "^10.2.8",
     "@nestjs/core": "^10.2.8",
     "@nestjs/jwt": "^10.1.1",
@@ -23,8 +24,10 @@
     "@nestjs/passport": "^10.0.2",
     "@nestjs/platform-express": "^10.2.8",
     "@nestjs/swagger": "^7.1.14",
+    "@nestjs/terminus": "^10.1.1",
     "@nestjs/throttler": "^4.2.1",
     "argon2": "^0.31.1",
+    "axios": "^1.6.0",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",

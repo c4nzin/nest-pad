@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { NoteModule } from './note/note.module';
-import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { CloudinaryModule } from '../modules/cloudinary/cloudinary.module';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokenStrategy, RefreshTokenStrategy } from './auth/strategies';
 import { RouterModule } from '@nestjs/core';
