@@ -11,7 +11,6 @@ import {
   UploadedFile,
   UsePipes,
   MaxFileSizeValidator,
-  ParseArrayPipe,
   ParseFilePipe,
   FileTypeValidator,
 } from '@nestjs/common';
@@ -27,6 +26,7 @@ import { ObjectIdPipeValidation } from 'src/core/pipes';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'nestjs-cloudinary';
 import { Express } from 'express';
+import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
 
 @Controller()
 @UseGuards(AccessTokenGuard)
@@ -87,7 +87,7 @@ export class NoteController {
       }),
     )
     file: Express.Multer.File,
-  ) {
+  ): Promise<UploadApiResponse | UploadApiErrorResponse> {
     return this.cloudinaryService.uploadFile(file, {
       allowed_formats: ['pdf'],
       format: 'pdf',
