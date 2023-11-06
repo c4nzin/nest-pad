@@ -1,3 +1,4 @@
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import {
   registerDecorator,
   ValidationOptions,
@@ -8,16 +9,17 @@ import {
 import { UserService } from 'src/features/user/user.service';
 
 @ValidatorConstraint({ async: true })
+@Injectable()
 export class IsUsernameIsTaken implements ValidatorConstraintInterface {
   constructor(private readonly userService: UserService) {}
 
-  public validate(
-    username: any,
-    validationArguments?: ValidationArguments,
-  ): Promise<boolean> {
-    return this.userService.findByUsername(username).then(() => {
-      if (username) return false;
-      return true;
+  public async validate(username: string): Promise<boolean> {
+    return await this.userService.findByUsername(username).then((user) => {
+      if (user) {
+        throw new UnprocessableEntityException('Username is already exists');
+      } else {
+        return true;
+      }
     });
   }
   defaultMessage(validationArguments?: ValidationArguments): string {
@@ -26,13 +28,15 @@ export class IsUsernameIsTaken implements ValidatorConstraintInterface {
 }
 
 export function IsUsernameAlreadyExists(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: any, propertyName: string) {
     registerDecorator({
       propertyName,
       validator: IsUsernameIsTaken,
       target: object.constructor,
       async: true,
       constraints: [],
+      options: validationOptions,
+      name: 'username',
     });
   };
 }

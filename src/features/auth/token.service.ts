@@ -23,7 +23,7 @@ export class TokenService {
     userId: string | Types.ObjectId,
     refreshToken: string,
   ): Promise<UserDocument> {
-    const hashedRefreshToken = await bcrypt.hashSync(refreshToken, 10);
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     return await this.usersService.updateRefreshToken(userId, {
       refreshToken: hashedRefreshToken,
     });
@@ -61,7 +61,7 @@ export class TokenService {
       throw new ForbiddenException('Refresh token is not found');
     }
 
-    const isRefreshTokenValid = await bcrypt.compareSync(
+    const isRefreshTokenValid = await bcrypt.compare(
       user.refreshToken,
       refreshToken,
     );

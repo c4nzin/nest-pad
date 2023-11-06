@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, Types, UpdateWriteOpResult } from 'mongoose';
 import { RegisterDto, RefreshTokenDto } from '../auth/dto';
-import { User, UserDocument } from './user.schema';
+import { UserDocument } from './user.schema';
 import { UserRepository } from './repositories/user.repository';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   public async createUser(registerDto: RegisterDto): Promise<UserDocument> {
-    return this.userRepository.createUser(registerDto);
+    return await this.userRepository.createUser(registerDto);
   }
 
   public async findById(

@@ -23,14 +23,14 @@ export class AuthController {
 
   @Message('Sucessfully registered')
   @Post('register')
-  public async register(@Body() registerDto: RegisterDto): Promise<string> {
-    return await this.authService.register(registerDto);
+  public register(@Body() registerDto: RegisterDto): Promise<string> {
+    return this.authService.register(registerDto);
   }
 
   @Message('Sucessfully logged in')
   @Post('login')
-  public async login(@Body() loginDto: LoginDto): Promise<LoginReturnType> {
-    return await this.authService.login(loginDto);
+  public login(@Body() loginDto: LoginDto): Promise<LoginReturnType> {
+    return this.authService.login(loginDto);
   }
 
   @UseGuards(AccessTokenGuard)

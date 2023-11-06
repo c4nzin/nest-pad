@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -41,7 +42,12 @@ export class UserRepository {
   }
 
   public async createUser(registerDto: RegisterDto): Promise<UserDocument> {
-    return await new this.userModel(registerDto).save();
+    try {
+      const user = new this.userModel(registerDto);
+      return await user.save();
+    } catch (error: any) {
+      throw new BadRequestException(error);
+    }
   }
 
   public async validateFindByEmail(email: string): Promise<UserDocument> {
