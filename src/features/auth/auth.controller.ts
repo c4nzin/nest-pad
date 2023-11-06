@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { RegisterDto } from './dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto';
@@ -15,6 +23,7 @@ export type LoginReturnType = {
 
 @Controller()
 @ApiTags('Auth')
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(
     private authService: AuthService,

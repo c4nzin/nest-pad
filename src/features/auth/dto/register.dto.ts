@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsUsernameAlreadyExists } from 'src/core/decorators';
+import { Exclude } from 'class-transformer';
 
 export class RegisterDto {
   @ApiProperty()
@@ -18,6 +19,7 @@ export class RegisterDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
+  @Exclude()
   public password: string;
 
   @IsEmail()
