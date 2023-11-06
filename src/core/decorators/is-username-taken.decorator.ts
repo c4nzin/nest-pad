@@ -20,6 +20,9 @@ export class IsUsernameIsTaken implements ValidatorConstraintInterface {
       return true;
     });
   }
+  defaultMessage(validationArguments?: ValidationArguments): string {
+    return `username is already exists, ${validationArguments.value}`;
+  }
 }
 
 export function IsUsernameAlreadyExists(validationOptions?: ValidationOptions) {
