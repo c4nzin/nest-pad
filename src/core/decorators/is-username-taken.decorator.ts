@@ -22,13 +22,13 @@ export class IsUsernameIsTaken implements ValidatorConstraintInterface {
       }
     });
   }
-  defaultMessage(validationArguments?: ValidationArguments): string {
+  public defaultMessage(validationArguments?: ValidationArguments): string {
     return `username is already exists, ${validationArguments.value}`;
   }
 }
 
 export function IsUsernameAlreadyExists(validationOptions?: ValidationOptions) {
-  return function (object: any, propertyName: string) {
+  return function (object: any, propertyName: string): void {
     registerDecorator({
       propertyName,
       validator: IsUsernameIsTaken,
