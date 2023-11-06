@@ -1,6 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, Types, UpdateWriteOpResult } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { FilterQuery, Types, UpdateWriteOpResult } from 'mongoose';
 import { RegisterDto, RefreshTokenDto } from '../auth/dto';
 import { UserDocument } from './user.schema';
 import { UserRepository, userReturnType } from './repositories/user.repository';

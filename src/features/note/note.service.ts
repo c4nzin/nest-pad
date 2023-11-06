@@ -25,14 +25,12 @@ export class NoteService {
     // NEED TO BE FIXED: await this.usersService.deleteItemFromArray(requestId, toDeleteNotepadId);
   }
 
-  //Need to be refactored
   public async findNoteById(
     noteId: string,
     userId: Types.ObjectId | string,
   ): Promise<NoteDocument> {
     return this.noteRepository.findNote(noteId, userId);
   }
-  1;
 
   public async updateNoteById(
     noteId: string,

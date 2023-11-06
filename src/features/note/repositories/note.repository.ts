@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -70,7 +69,7 @@ export class NoteRepository {
     noteId: string,
     loggedUserId: string | Types.ObjectId,
     updateDto: UpdateNoteDto,
-  ) {
+  ): Promise<NoteDocument> {
     const notepad = await this.noteModel.findById(noteId);
 
     if (!notepad) throw new BadRequestException('Note not found');

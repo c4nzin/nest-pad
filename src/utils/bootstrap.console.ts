@@ -17,6 +17,7 @@ bootstrapConsole.init().then(async (app: INestApplication) => {
     await app.init();
     await bootstrapConsole.boot();
     await app.close();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     throw new BadRequestException(error.message);
   }
