@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, Types, UpdateWriteOpResult } from 'mongoose';
 import { RegisterDto, RefreshTokenDto } from '../auth/dto';
 import { UserDocument } from './user.schema';
-import { UserRepository } from './repositories/user.repository';
+import { UserRepository, userReturnType } from './repositories/user.repository';
 
 @Injectable()
 export class UserService {
@@ -58,7 +58,7 @@ export class UserService {
     return await this.userRepository.deleteNote(loggedUserId, noteId);
   }
 
-  public async loggedUser(username: string): Promise<UserDocument> {
+  public async loggedUser(username: string): Promise<userReturnType> {
     return this.userRepository.loggedUser(username);
   }
 }

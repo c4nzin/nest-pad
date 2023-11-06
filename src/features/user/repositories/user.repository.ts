@@ -9,6 +9,13 @@ import { User, UserDocument } from '../user.schema';
 import { FilterQuery, Model, Types, UpdateWriteOpResult } from 'mongoose';
 import { RefreshTokenDto, RegisterDto } from 'src/features/auth/dto';
 
+export type userReturnType = {
+  username: string;
+  id: Types.ObjectId;
+  email: string;
+  notes: Types.ObjectId[];
+};
+
 @Injectable()
 export class UserRepository {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
@@ -100,15 +107,22 @@ export class UserRepository {
     );
   }
 
-  public async validateLoggedUser(username: string): Promise<UserDocument> {
+  public async validateLoggedUser(username: string): Promise<userReturnType> {
     const user = await this.findByUsername(username);
 
     if (!user) throw new NotFoundException('No user found');
 
-    return user;
+    const modifiedUser: userReturnType = {
+      username: user.username,
+      id: user.id,
+      email: user.email,
+      notes: user.notes,
+    };
+
+    return modifiedUser;
   }
 
-  public async loggedUser(username: string): Promise<UserDocument> {
+  public async loggedUser(username: string): Promise<userReturnType> {
     return this.validateLoggedUser(username);
   }
 }
