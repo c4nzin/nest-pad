@@ -12,6 +12,7 @@ import { RefreshTokenDto, RegisterDto } from 'src/features/auth/dto';
 export type userReturnType = {
   username: string;
   id: Types.ObjectId;
+  password: string;
   email: string;
   notes: Types.ObjectId[];
 };
@@ -115,6 +116,7 @@ export class UserRepository {
     const modifiedUser: userReturnType = {
       username: user.username,
       id: user.id,
+      password: user.password,
       email: user.email,
       notes: user.notes,
     };

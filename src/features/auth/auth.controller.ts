@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Post,
+  SerializeOptions,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -32,6 +33,9 @@ export class AuthController {
 
   @Message('Sucessfully registered')
   @Post('register')
+  @SerializeOptions({
+    groups: ['user'],
+  })
   public register(@Body() registerDto: RegisterDto): Promise<string> {
     return this.authService.register(registerDto);
   }

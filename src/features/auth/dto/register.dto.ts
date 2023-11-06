@@ -9,8 +9,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsUsernameAlreadyExists } from 'src/core/decorators';
 import { Expose, Exclude } from 'class-transformer';
 
-export const USER_DETAILS = 'user_details';
-
 export class RegisterDto {
   @ApiProperty()
   @IsNotEmpty()
@@ -21,7 +19,7 @@ export class RegisterDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  @Expose({ groups: [USER_DETAILS] })
+  @Expose({ groups: ['user'] })
   public password: string;
 
   @IsEmail()

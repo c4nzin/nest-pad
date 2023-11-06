@@ -11,7 +11,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from 'src/core/guards';
 import { Message, User } from 'src/core/decorators';
 import { User as IUser } from './user.schema';
-import { USER_DETAILS } from '../auth/dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -21,7 +20,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('me')
-  @SerializeOptions({ groups: [USER_DETAILS] })
+  @SerializeOptions({ groups: ['user'] })
   @Message('Succesffully fetched the logged user')
   public getLoggedUser(@User() user: IUser) {
     return this.userService.loggedUser(user.username);
