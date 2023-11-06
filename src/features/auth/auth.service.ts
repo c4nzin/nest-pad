@@ -24,7 +24,6 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-    console.log(hashedPassword);
 
     const createdUser = await this.userService.createUser({
       ...registerDto,
@@ -46,12 +45,12 @@ export class AuthService {
       throw new BadRequestException('User does not exist');
     }
 
-    const isPasswordMatches = await bcrypt.compare(
+    const isPasswordMatches = bcrypt.compareSync(
       loginDto.password,
       user.password,
     );
 
-    if (isPasswordMatches) {
+    if (!isPasswordMatches) {
       throw new BadRequestException('Password is not correct');
     }
 
