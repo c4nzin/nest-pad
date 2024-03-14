@@ -7,11 +7,14 @@ import helmet from 'helmet';
 import compression from 'compression';
 import { HttpExceptionFilter } from './core/filters';
 import { LoggingInterceptor, TransformInterceptor } from './core/interceptors';
-import { PipeValidation } from './core/pipes';
+import { ValidationPipe } from './core/pipes';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 export async function setupApp(app: NestExpressApplication): Promise<void> {
   const config = app.get<Config>(ENV);
   const logger = app.get<Logger>(Logger);
+
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
   app.enableCors({ credentials: true, origin: config.ORIGIN });
 
@@ -24,7 +27,7 @@ export async function setupApp(app: NestExpressApplication): Promise<void> {
 
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor(new Reflector()));
-  app.useGlobalPipes(new PipeValidation());
+  app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new LoggingInterceptor(logger));
 
   app.setGlobalPrefix(config.GLOBAL_PREFIX);
