@@ -1,5 +1,9 @@
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  SwaggerCustomOptions,
+  SwaggerModule,
+} from '@nestjs/swagger';
 import { Config, ENV } from './config';
 
 export function setupSwagger(app: NestExpressApplication): void {
@@ -8,6 +12,7 @@ export function setupSwagger(app: NestExpressApplication): void {
     .setTitle('Memo pal')
     .setDescription('Api')
     .setVersion('1.0')
+    .addBearerAuth()
     .addTag('notes')
     .build();
 
@@ -15,5 +20,16 @@ export function setupSwagger(app: NestExpressApplication): void {
     deepScanRoutes: true,
   });
 
-  SwaggerModule.setup(config.GLOBAL_PREFIX, app, document);
+  const customSwaggerOptions: SwaggerCustomOptions = {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  };
+
+  SwaggerModule.setup(
+    config.GLOBAL_PREFIX,
+    app,
+    document,
+    customSwaggerOptions,
+  );
 }
