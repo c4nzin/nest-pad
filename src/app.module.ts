@@ -6,12 +6,9 @@ import { JwtModule } from './modules/jwt/jwt.module';
 import { ThrottlerModule } from './modules/throttler/throttler.module';
 import { HealthModule } from './modules/health/health.module';
 import { EnvalidModule } from './modules/envalid/envalid.module';
-import { WinstonModule } from 'nest-winston';
-import winstonConfig from './modules/logger/winston';
 
 @Module({
   imports: [
-    WinstonModule.forRoot(winstonConfig),
     EnvalidModule,
     LoggerModule,
     DatabaseModule,

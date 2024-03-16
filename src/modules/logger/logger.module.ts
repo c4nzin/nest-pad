@@ -1,25 +1,8 @@
 import { Module } from '@nestjs/common';
-import { LoggerModule as PinoModule } from 'nestjs-pino';
-
-//Will be removed soon
-//Using winston not pino
+import { LoggerService } from './logger.service';
 
 @Module({
-  imports: [
-    PinoModule.forRoot({
-      pinoHttp: {
-        autoLogging: false,
-        transport: {
-          targets: [
-            {
-              target: 'pino-pretty',
-              level: 'info',
-              options: {},
-            },
-          ],
-        },
-      },
-    }),
-  ],
+  providers: [LoggerService],
+  exports: [LoggerService],
 })
 export class LoggerModule {}
